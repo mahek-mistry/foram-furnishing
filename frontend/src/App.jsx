@@ -6,7 +6,7 @@ import Signup from './pages/Signup'
 import Login from './pages/Login'
 import Verify from './pages/Verify'
 import VerifyEmail from './pages/VerifyEmail'
-import Profile from './pages/profile'
+
 import Footer from './components/ui/Footer'
 import Aboutus from './pages/Aboutus'
 import Contactus from './pages/Contactus'
@@ -29,6 +29,7 @@ import OrderSuccess from './pages/OrderSuccess'
 import ChangePassword from './pages/ChangePassword'
 import VerifyOtp from './pages/VerifyOtp'
 import ForgotPassword from './pages/ForgotPassword'
+import Profile from './pages/Profile'
 
 const router = createBrowserRouter([
   {
