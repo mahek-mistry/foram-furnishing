@@ -7,6 +7,8 @@ import cartRoute from './routes/cartRoute.js'
 import orderRoute from './routes/orderRoute.js'
 import cors from 'cors'
 import { Cart } from './models/cartModel.js'
+import wishlistRoutes from "./routes/wishlistRoutes.js";
+
 
 const app = express()
 const PORT = process.env.PORT || 3000
@@ -21,6 +23,7 @@ app.use('/api/v1/user', userRoute)
 app.use('/api/v1/product', productRoute)
 app.use('/api/v1/cart', cartRoute)
 app.use('/api/v1/orders', orderRoute)
+app.use("/api/v1/wishlist", wishlistRoutes);
 
 
 

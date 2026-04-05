@@ -11,6 +11,9 @@ export const createOrder = async (req, res) => {
   try {
     const { products, amount, tax, shipping, currency } = req.body;
 
+    console.log("BODY:", req.body);
+    console.log("USER:", req.user);
+
     const options = {
       amount: Math.round(Number(amount) * 100),
       currency: currency || "INR",
@@ -27,6 +30,7 @@ export const createOrder = async (req, res) => {
       shipping,
       currency,
       status: "Pending",
+      paymentMethod: "RAZORPAY", // ✅ MUST BE HERE
       razorpayOrderId: razorpayOrder.id,
     });
 
@@ -38,8 +42,11 @@ export const createOrder = async (req, res) => {
       dbOrder: newOrder,
     });
   } catch (error) {
-    console.error("Error in create order:", error);
-    res.status(500).json({ success: false, message: error.message });
+    console.error("🔥 ERROR:", error); // IMPORTANT
+    res.status(500).json({
+      success: false,
+      message: error.message,
+    });
   }
 };
 
@@ -159,7 +166,7 @@ Foram Furnishing
 
 export const getMyOrder = async (req, res) => {
   try {
-    const userId = req.id;
+    const userId = req.user._id; // ✅ FIXED
 
     const orders = await Order.find({ user: userId })
       .populate({
@@ -179,7 +186,7 @@ export const getMyOrder = async (req, res) => {
   }
 };
 
-/* ---------------- DOWNLOAD INVOICE PDF ---------------- */
+/* DOWNLOAD INVOICE PDF*/
 
 export const downloadInvoice = async (req, res) => {
   try {
@@ -338,5 +345,123 @@ export const getSalesData = async (req, res) => {
   } catch (error) {
     console.error("Error fetching sales data:", error);
     res.status(500).json({ success: false, message: error.message });
+  }
+};
+
+export const updateOrderStatus = async (req, res) => {
+
+  try {
+
+    const { status } = req.body;
+
+    const order = await Order.findById(req.params.id);
+
+    if (!order) {
+      return res.status(404).json({
+        success:false,
+        message:"Order not found"
+      });
+    }
+
+    order.orderStatus = status;
+
+    await order.save();
+
+    res.status(200).json({
+      success:true,
+      message:"Order updated",
+      order
+    });
+
+  } catch (error) {
+
+    res.status(500).json({
+      success:false,
+      message:error.message
+    });
+
+  }
+};
+
+export const createCODOrder = async (req, res) => {
+  try {
+    const { products, amount, tax, shipping, currency } = req.body;
+
+    const order = new Order({
+      user: req.user._id,
+      products,
+      amount,
+      tax,
+      shipping,
+      currency,
+      status: "Pending",
+      paymentMethod: "COD",
+      orderStatus: "Order Placed",
+    });
+
+    await order.save();
+
+    // Populate for email
+    const populatedOrder = await Order.findById(order._id)
+      .populate("user", "firstName email")
+      .populate({
+        path: "products.productId",
+        select: "productName productPrice",
+      });
+
+    // Clear cart
+    await Cart.findOneAndUpdate(
+      { userId: req.user._id },
+      { $set: { items: [], totalPrice: 0 } }
+    );
+
+    // 🟢 CREATE PRODUCT LIST
+    const productList = populatedOrder.products
+      .map(
+        (p) =>
+          `${p.productId.productName} (Qty: ${p.quantity}) - ₹${p.productId.productPrice}`
+      )
+      .join("\n");
+
+    // 🟢 EMAIL MESSAGE
+    const message = `
+Hello ${populatedOrder.user.firstName},
+
+🎉 Your order has been successfully placed!
+
+Order ID: ${populatedOrder._id}
+
+Products:
+${productList}
+
+Tax: ₹${populatedOrder.tax}
+Shipping: ₹${populatedOrder.shipping}
+Total Amount: ₹${populatedOrder.amount}
+
+Payment Method: Cash on Delivery
+
+Thank you for shopping with us 🪑
+Foram Furnishing
+`;
+
+    // 🟢 SEND EMAIL
+    await sendEmail(
+      populatedOrder.user.email,
+      "Order Confirmation - COD",
+      message
+    );
+
+    res.json({
+      success: true,
+      message: "COD Order placed successfully",
+      order: populatedOrder,
+    });
+
+  } catch (error) {
+    console.error("🔥 COD ERROR:", error);
+    res.status(500).json({
+      success: false,
+      message: error.message,
+    });
   }
 };

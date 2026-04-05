@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import axios from "axios";
 import { toast } from "sonner";
 import { useNavigate } from "react-router-dom";
-import { ShoppingCart } from "lucide-react";
+import { ShoppingCart, Heart } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useDispatch, useSelector } from "react-redux";
 import { setUser } from "@/redux/userSlice";
@@ -12,6 +12,10 @@ import logo from "../../assets/lo.png";
 const Navbar = () => {
   const { user } = useSelector((store) => store.user);
   const { cart } = useSelector((store) => store.product);
+
+  // ✅ FIXED HERE (only change)
+  const { items } = useSelector((store) => store.wishlist);
+
   const admin = user?.role === "admin" ? true : false;
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -26,14 +30,13 @@ const Navbar = () => {
           headers: {
             Authorization: `Bearer ${accessToken}`,
           },
-        },
+        }
       );
 
       if (res.data.success) {
         dispatch(setUser(null));
         toast.success(res.data.message);
 
-        // remove token
         localStorage.removeItem("accessToken");
 
         navigate("/login");
@@ -43,11 +46,13 @@ const Navbar = () => {
       toast.error("Logout failed");
     }
   };
+
   console.log(cart);
 
   return (
     <header className="fixed top-0 left-0 w-full z-50 bg-white/80 backdrop-blur-md">
       <div className="max-w-7xl mx-auto flex items-center justify-between px-6 py-4 bg-white/80 backdrop-blur-md rounded-b-2xl">
+        
         {/* Logo */}
         <div className="flex items-center gap-2 font-semibold text-lg">
           <img
@@ -64,32 +69,49 @@ const Navbar = () => {
             <Link to={"/"}>
               <li>Home</li>
             </Link>
+
             <Link to={"/product"}>
               <li>Product</li>
             </Link>
+
             <Link to={"/service"}>
               <li>Service</li>
             </Link>
+
             <Link to={"/project"}>
               <li>Project</li>
             </Link>
+
             <Link to={"/aboutus"}>
               <li>About US</li>
             </Link>
+
             <Link to={"/contactus"}>
               <li>Contact US</li>
             </Link>
+
             {user && (
               <Link to={`/profile/${user._id}`}>
                 <li>Hello , {user.firstName}</li>
               </Link>
             )}
+
             {admin && (
               <Link to={`/dashboard/sales`}>
                 <li>Dashboard</li>
               </Link>
             )}
           </ul>
+
+          {/* ❤️ Wishlist Icon */}
+          <Link to={"/wishlist"} className="relative">
+            <Heart />
+            <span className="bg-red-500 rounded-full absolute text-white -top-3 -right-5 px-2">
+              {items?.length || 0} {/* ✅ FIXED */}
+            </span>
+          </Link>
+
+          {/* 🛒 Cart */}
           <Link to={"/cart"} className="relative">
             <ShoppingCart />
             <span className="bg-blue-500 rounded-full absolute text-white -top-3 -right-5 px-2">
@@ -99,6 +121,7 @@ const Navbar = () => {
                 0}
             </span>
           </Link>
+
           {user ? (
             <Button
               onClick={logoutHandler}

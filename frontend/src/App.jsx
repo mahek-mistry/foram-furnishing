@@ -6,7 +6,7 @@ import Signup from './pages/Signup'
 import Login from './pages/Login'
 import Verify from './pages/Verify'
 import VerifyEmail from './pages/VerifyEmail'
-
+import Wishlist from './pages/Wishlist'
 import Footer from './components/ui/Footer'
 import Aboutus from './pages/Aboutus'
 import Contactus from './pages/Contactus'
@@ -90,7 +90,10 @@ const router = createBrowserRouter([
     element:<ProtectedRoute><Navbar/><Cart/><Footer/></ProtectedRoute>
   },
 
-  
+  {
+  path:'/wishlist',
+  element:<ProtectedRoute><Navbar/><Wishlist/><Footer/></ProtectedRoute>
+},
 
   {
     path:'/address',
