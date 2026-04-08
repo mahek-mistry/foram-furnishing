@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import {
   Select,
@@ -17,7 +16,6 @@ import { useDispatch, useSelector } from "react-redux";
 import { setProducts, setAllProducts } from "@/redux/productSlice";
 
 const Products = () => {
-
   const { products } = useSelector((state) => state.product);
 
   // renamed to avoid conflict with redux action
@@ -37,14 +35,13 @@ const Products = () => {
       setLoading(true);
 
       const res = await axios.get(
-        "http://localhost:8000/api/v1/product/getallproducts"
+        "http://localhost:8000/api/v1/product/getallproducts",
       );
 
       if (res.data.success) {
         setLocalProducts(res.data.products);
         dispatch(setAllProducts(res.data.products));
       }
-
     } catch (error) {
       console.log(error);
       toast.error(error?.response?.data?.message || "Error fetching products");
@@ -54,7 +51,6 @@ const Products = () => {
   };
 
   useEffect(() => {
-
     if (allProducts.length === 0) return;
 
     let filtered = [...allProducts];
@@ -62,7 +58,7 @@ const Products = () => {
     // search
     if (search.trim() !== "") {
       filtered = filtered.filter((p) =>
-        p.productName?.toLowerCase().includes(search.toLowerCase())
+        p.productName?.toLowerCase().includes(search.toLowerCase()),
       );
     }
 
@@ -78,9 +74,7 @@ const Products = () => {
 
     // price range
     filtered = filtered.filter(
-      (p) =>
-        p.productPrice >= priceRange[0] &&
-        p.productPrice <= priceRange[1]
+      (p) => p.productPrice >= priceRange[0] && p.productPrice <= priceRange[1],
     );
 
     // sorting
@@ -91,19 +85,15 @@ const Products = () => {
     }
 
     dispatch(setProducts(filtered));
-
   }, [search, category, brand, priceRange, sortOrder, allProducts, dispatch]);
-
 
   useEffect(() => {
     getAllProducts();
   }, []);
 
-
   return (
     <div className="pt-20 pb-15 pl-10 pr-10">
       <div className="max-w-7xl mx-auto flex gap-7">
-
         {/* Sidebar */}
         <FilterSidebar
           search={search}
@@ -119,36 +109,21 @@ const Products = () => {
 
         {/* Products section */}
         <div className="flex flex-col flex-1">
-
           {/* Sorting */}
           <div className="flex justify-end mb-4">
-
-            <Select onValueChange={(value) => setSortOrder(value)}>
-              <SelectTrigger className="w-[200px]">
-                <SelectValue placeholder="Sort by price" />
-              </SelectTrigger>
-
-              <SelectContent>
-                <SelectGroup>
-                  <SelectLabel>Price</SelectLabel>
-
-                  <SelectItem value="lowToHigh">
-                    Price: Low to high
-                  </SelectItem>
-
-                  <SelectItem value="highToLow">
-                    Price: High to low
-                  </SelectItem>
-
-                </SelectGroup>
-              </SelectContent>
-            </Select>
-
+            <select
+              value={sortOrder}
+              onChange={(e) => setSortOrder(e.target.value)}
+              className="w-[200px] border rounded-md px-3 py-2 bg-white shadow-sm"
+            >
+              <option value="">Sort by price</option>
+              <option value="lowToHigh">Price: Low → High</option>
+              <option value="highToLow">Price: High → Low</option>
+            </select>
           </div>
 
           {/* Products Grid */}
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-7">
-
             {products?.length > 0 ? (
               products.map((product) => (
                 <ProductCard
@@ -160,9 +135,7 @@ const Products = () => {
             ) : (
               <p className="text-gray-500">No products found</p>
             )}
-
           </div>
-
         </div>
       </div>
     </div>
@@ -170,4 +143,3 @@ const Products = () => {
 };
 
 export default Products;
-
