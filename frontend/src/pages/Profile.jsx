@@ -124,11 +124,13 @@ const Profile = () => {
   };
   return (
     <div className="pt-20 min-h-screen bg-gray-100">
-      <Tabs defaultValue="profile" className="max-w-7xl mx-auto item-center">
-        <TabsList>
-          <TabsTrigger value="profile">Profile</TabsTrigger>
-          <TabsTrigger value="orders">orders</TabsTrigger>
-        </TabsList>
+      <Tabs defaultValue="profile" className="max-w-7xl mx-auto">
+        <div className="w-full flex justify-center">
+          <TabsList className="flex gap-8">
+            <TabsTrigger value="profile">Profile</TabsTrigger>
+            <TabsTrigger value="orders">Orders</TabsTrigger>
+          </TabsList>
+        </div>
 
         <TabsContent value="profile">
           <div className="flex flex-col justify-center items-center bg-gray-100">
@@ -155,7 +157,10 @@ const Profile = () => {
               </div>
 
               {/* profile form */}
-              <form onSubmit={handleSubmit} className="space-y-4 shadow-lg p-5 rounded-lg bg-white">
+              <form
+                onSubmit={handleSubmit}
+                className="space-y-4 shadow-lg p-5 rounded-lg bg-white"
+              >
                 <div className="grid grid-cols-2 gap-4">
                   <div>
                     <Label className="block text-sm font-medium">
@@ -190,7 +195,7 @@ const Profile = () => {
                     type="email"
                     name="email"
                     value={updateUser.email}
-                      onChange={handleChange}
+                    onChange={handleChange}
                     disabled
                     className="w-full border rounded-lg px-3 py-2 mt-1 bg-grey-100 cursor-not-allowed"
                   />
@@ -204,7 +209,7 @@ const Profile = () => {
                     name="phoneNo"
                     placeholder="Enter your contact No"
                     value={updateUser.phoneNo}
-                      onChange={handleChange}
+                    onChange={handleChange}
                     className="w-full border rounded-lg px-3 py-2 mt-1 "
                   />
                 </div>
@@ -215,7 +220,7 @@ const Profile = () => {
                     name="address"
                     placeholder="Enter your Address"
                     value={updateUser.address}
-                      onChange={handleChange}
+                    onChange={handleChange}
                     className="w-full border rounded-lg px-3 py-2 mt-1 "
                   />
                 </div>
@@ -226,7 +231,7 @@ const Profile = () => {
                     name="city"
                     placeholder="Ahmedabad"
                     value={updateUser.city}
-                      onChange={handleChange}
+                    onChange={handleChange}
                     className="w-full border rounded-lg px-3 py-2 mt-1 "
                   />
                 </div>
@@ -237,7 +242,7 @@ const Profile = () => {
                     name="zipcode"
                     placeholder="382481"
                     value={updateUser.zipCode}
-                      onChange={handleChange}
+                    onChange={handleChange}
                     className="w-full border rounded-lg px-3 py-2 mt-1 "
                   />
                 </div>
@@ -253,7 +258,7 @@ const Profile = () => {
         </TabsContent>
 
         <TabsContent value="orders">
-          <MyOrder/>
+          <MyOrder />
         </TabsContent>
       </Tabs>
     </div>
@@ -261,4 +266,3 @@ const Profile = () => {
 };
 
 export default Profile;
-

@@ -23,12 +23,13 @@ const Contactus = () => {
             <h2 className="text-lg font-semibold mb-6">📧 Send us a message</h2>
 
             <form className="space-y-5">
+              {/* Name + Email */}
               <div className="grid md:grid-cols-2 gap-4">
                 <div>
                   <label className="text-sm text-gray-600">Full Name</label>
                   <input
                     type="text"
-                    placeholder="John Doe"
+                    placeholder="Enter your full name"
                     className="w-full border rounded-lg p-3 mt-1"
                   />
                 </div>
@@ -37,18 +38,19 @@ const Contactus = () => {
                   <label className="text-sm text-gray-600">Email Address</label>
                   <input
                     type="email"
-                    placeholder="john@example.com"
+                    placeholder="abc@example.com"
                     className="w-full border rounded-lg p-3 mt-1"
                   />
                 </div>
               </div>
 
+              {/* Phone + Inquiry Type */}
               <div className="grid md:grid-cols-2 gap-4">
                 <div>
                   <label className="text-sm text-gray-600">Phone Number</label>
                   <input
                     type="text"
-                    placeholder="+1 (555) 000-0000"
+                    placeholder="+91 9876543210"
                     className="w-full border rounded-lg p-3 mt-1"
                   />
                 </div>
@@ -56,22 +58,59 @@ const Contactus = () => {
                 <div>
                   <label className="text-sm text-gray-600">Inquiry Type</label>
                   <select className="w-full border rounded-lg p-3 mt-1">
-                    <option>General Inquiry</option>
-                    <option>Interior Design</option>
-                    <option>Furniture</option>
+                    <option value="">Select Inquiry Type</option>
+                    <option value="interior">Interior Design</option>
+                    <option value="furniture">Furniture</option>
                   </select>
                 </div>
               </div>
 
+              {/* Project Style + Space Type */}
+              <div className="grid md:grid-cols-2 gap-4">
+                <div>
+                  <label className="text-sm text-gray-600">Project Style</label>
+                  <select className="w-full border rounded-lg p-3 mt-1">
+                    <option value="">Select Style</option>
+                    <option value="modern">Modern</option>
+                    <option value="traditional">Traditional</option>
+                    <option value="minimal">Minimal</option>
+                    <option value="luxury">Luxury</option>
+                  </select>
+                </div>
+
+                <div>
+                  <label className="text-sm text-gray-600">Space Type</label>
+                  <input
+                    type="text"
+                    placeholder="e.g. 2BHK, Kitchen, Office"
+                    className="w-full border rounded-lg p-3 mt-1"
+                  />
+                </div>
+              </div>
+
+              {/* Location */}
+              <div>
+                <label className="text-sm text-gray-600">
+                  Project Location
+                </label>
+                <input
+                  type="text"
+                  placeholder="e.g. Ahmedabad, Satellite"
+                  className="w-full border rounded-lg p-3 mt-1"
+                />
+              </div>
+
+              {/* Message */}
               <div>
                 <label className="text-sm text-gray-600">Message</label>
                 <textarea
                   rows="5"
-                  placeholder="Tell us how we can help you..."
+                  placeholder="Tell us about your requirements..."
                   className="w-full border rounded-lg p-3 mt-1"
                 ></textarea>
               </div>
 
+              {/* Button */}
               <button
                 type="submit"
                 className="w-full bg-blue-600 text-white py-3 rounded-lg font-medium hover:bg-blue-700 transition"
@@ -91,7 +130,9 @@ const Contactus = () => {
               <div>
                 <p className="font-medium">Visit our Showroom</p>
                 <p className="text-gray-500 text-sm">
-                  202, Silver Radiance One Besides Pragati Grand Hotel, Nr Zydus Hospital Hebatpur, Thaltej Rd, Thaltej, Ahmedabad, Gujarat 380059
+                  202, Silver Radiance One Besides Pragati Grand Hotel, Nr Zydus
+                  Hospital Hebatpur, Thaltej Rd, Thaltej, Ahmedabad, Gujarat
+                  380059
                 </p>
               </div>
             </div>

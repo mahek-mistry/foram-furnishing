@@ -5,6 +5,7 @@ import item1 from "../assets/item1.jpeg";
 import item2 from "../assets/item2.jpeg";
 import item3 from "../assets/item3.jpeg";
 import item4 from "../assets/item4.jpeg";
+import p1 from "../assets/p1.jpg";
 
 const Project = () => {
   return (
@@ -47,7 +48,11 @@ const Project = () => {
         {/* Right Image Placeholder */}
         <div className="relative">
           <div className="bg-gray-300 h-[450px] rounded-2xl flex items-center justify-center">
-            <span className="text-gray-500">Your Image Here</span>
+            <img
+              src={p1}
+              alt="project image"
+              className="w-full h-full object-cover"
+            />
           </div>
 
           {/* Review Card */}
