@@ -30,146 +30,244 @@ import ChangePassword from './pages/ChangePassword'
 import VerifyOtp from './pages/VerifyOtp'
 import ForgotPassword from './pages/ForgotPassword'
 import Profile from './pages/Profile'
+import RootLayout from "./components/RootLayout";
 
-const router = createBrowserRouter([
-  {
-    path:'/',
-    element:<><Navbar/><Home/></>
-  },
+// const router = createBrowserRouter([
+//   {
+//     path:'/',
+//     element:<><Navbar/><Home/></>
+//   },
 
-  {
-    path:'/signup',
-    element:<><Signup/></>
-  },
+//   {
+//     path:'/signup',
+//     element:<><Signup/></>
+//   },
 
-  {
-    path:'/login',
-    element:<><Login/></>
-  },
+//   {
+//     path:'/login',
+//     element:<><Login/></>
+//   },
 
-  {
-    path:'/forgot-password',
-    element:<><Navbar/><ForgotPassword/><Footer/></>
-  },
+//   {
+//     path:'/forgot-password',
+//     element:<><Navbar/><ForgotPassword/><Footer/></>
+//   },
 
-  {
-    path:'/verify-otp',
-    element:<><Navbar/><VerifyOtp/><Footer/></>
-  },
+//   {
+//     path:'/verify-otp',
+//     element:<><Navbar/><VerifyOtp/><Footer/></>
+//   },
 
-  {
-    path:'/change-password',
-    element:<><Navbar/><ChangePassword/><Footer/></>
-  },
-  {
-    path:'/verify',
-    element:<><Verify/></>
-  },
-  {
-    path:'/verify/:token',
-    element:<><VerifyEmail/></>
-  },
+//   {
+//     path:'/change-password',
+//     element:<><Navbar/><ChangePassword/><Footer/></>
+//   },
+//   {
+//     path:'/verify',
+//     element:<><Verify/></>
+//   },
+//   {
+//     path:'/verify/:token',
+//     element:<><VerifyEmail/></>
+//   },
 
-  {
-    path:'/profile/:userId',
-    element:<ProtectedRoute><Navbar/><Profile/><Footer/></ProtectedRoute>
-  },
+//   {
+//     path:'/profile/:userId',
+//     element:<ProtectedRoute><Navbar/><Profile/><Footer/></ProtectedRoute>
+//   },
 
-  {
-    path:'/product',
-    element:<><Navbar/><Product/><Footer/></>
-  },
+//   {
+//     path:'/product',
+//     element:<><Navbar/><Product/><Footer/></>
+//   },
 
-  {
-    path:'/product/:id',
-    element:<><Navbar/><SingleProduct/></>
-  },
+//   {
+//     path:'/product/:id',
+//     element:<><Navbar/><SingleProduct/></>
+//   },
 
-  {
-    path:'/cart',
-    element:<ProtectedRoute><Navbar/><Cart/><Footer/></ProtectedRoute>
-  },
+//   {
+//     path:'/cart',
+//     element:<ProtectedRoute><Navbar/><Cart/><Footer/></ProtectedRoute>
+//   },
 
-  {
-  path:'/wishlist',
-  element:<ProtectedRoute><Navbar/><Wishlist/><Footer/></ProtectedRoute>
-},
+//   {
+//   path:'/wishlist',
+//   element:<ProtectedRoute><Navbar/><Wishlist/><Footer/></ProtectedRoute>
+// },
 
-  {
-    path:'/address',
-    element:<ProtectedRoute><AddressForm/></ProtectedRoute>
-  },
+//   {
+//     path:'/address',
+//     element:<ProtectedRoute><AddressForm/></ProtectedRoute>
+//   },
 
-  {
-    path:'/order-success',
-    element:<ProtectedRoute><OrderSuccess/></ProtectedRoute>
-  },
+//   {
+//     path:'/order-success',
+//     element:<ProtectedRoute><OrderSuccess/></ProtectedRoute>
+//   },
 
-  {
-    path:'/service',
-    element:<><Navbar/><Service/><Footer/></>
-  },
+//   {
+//     path:'/service',
+//     element:<><Navbar/><Service/><Footer/></>
+//   },
 
 
-  {
-    path:'/project',
-    element:<><Navbar/><Project/><Footer/></>
-  },
+//   {
+//     path:'/project',
+//     element:<><Navbar/><Project/><Footer/></>
+//   },
 
   
+//   {
+//     path:'/aboutus',
+//     element:<><Navbar/><Aboutus/><Footer/></>
+//   },
+
+//   {
+//     path:'/contactus',
+//     element:<><Navbar/><Contactus/><Footer/></>
+//   },
+
+//   {
+//     path:'/dashboard',
+//     element:<ProtectedRoute adminOnly={true}><Navbar/><Dashboard/></ProtectedRoute>,
+//     children:[
+//       {
+//         path:"sales",
+//         element: <AdminSales/>
+//       },
+
+//       {
+//         path:"add-product",
+//         element: <AddProduct/>
+//       },
+
+//       {
+//         path:"products",
+//         element: <AdminProduct/>
+//       },
+
+//       {
+//         path:"orders",
+//         element: <AdminOrders/>
+//       },
+
+//       {
+//         path:"users/orders/:userId",
+//         element: <ShowUserOrders/>
+//       },
+
+//       {
+//         path:"users",
+//         element: <AdminUsers/>
+//       },
+
+//       {
+//         path:"users/:id",
+//         element: <UserInfo/>
+//       },
+
+//     ]
+//   },
+
+// ])
+const router = createBrowserRouter([
   {
-    path:'/aboutus',
-    element:<><Navbar/><Aboutus/><Footer/></>
-  },
-
-  {
-    path:'/contactus',
-    element:<><Navbar/><Contactus/><Footer/></>
-  },
-
-  {
-    path:'/dashboard',
-    element:<ProtectedRoute adminOnly={true}><Navbar/><Dashboard/></ProtectedRoute>,
-    children:[
+    path: '/',
+    element: <RootLayout />, // 👈 add this
+    children: [
       {
-        path:"sales",
-        element: <AdminSales/>
+        index: true,
+        element: <><Navbar/><Home/></>
       },
-
       {
-        path:"add-product",
-        element: <AddProduct/>
+        path:'signup',
+        element:<Signup/>
       },
-
       {
-        path:"products",
-        element: <AdminProduct/>
+        path:'login',
+        element:<Login/>
       },
-
       {
-        path:"orders",
-        element: <AdminOrders/>
+        path:'forgot-password',
+        element:<><Navbar/><ForgotPassword/><Footer/></>
       },
-
       {
-        path:"users/orders/:userId",
-        element: <ShowUserOrders/>
+        path:'verify-otp',
+        element:<><Navbar/><VerifyOtp/><Footer/></>
       },
-
       {
-        path:"users",
-        element: <AdminUsers/>
+        path:'change-password',
+        element:<><Navbar/><ChangePassword/><Footer/></>
       },
-
       {
-        path:"users/:id",
-        element: <UserInfo/>
+        path:'verify',
+        element:<Verify/>
       },
-
+      {
+        path:'verify/:token',
+        element:<VerifyEmail/>
+      },
+      {
+        path:'profile/:userId',
+        element:<ProtectedRoute><Navbar/><Profile/><Footer/></ProtectedRoute>
+      },
+      {
+        path:'product',
+        element:<><Navbar/><Product/><Footer/></>
+      },
+      {
+        path:'product/:id',
+        element:<><Navbar/><SingleProduct/></>
+      },
+      {
+        path:'cart',
+        element:<ProtectedRoute><Navbar/><Cart/><Footer/></ProtectedRoute>
+      },
+      {
+        path:'wishlist',
+        element:<ProtectedRoute><Navbar/><Wishlist/><Footer/></ProtectedRoute>
+      },
+      {
+        path:'address',
+        element:<ProtectedRoute><AddressForm/></ProtectedRoute>
+      },
+      {
+        path:'order-success',
+        element:<ProtectedRoute><OrderSuccess/></ProtectedRoute>
+      },
+      {
+        path:'service',
+        element:<><Navbar/><Service/><Footer/></>
+      },
+      {
+        path:'project',
+        element:<><Navbar/><Project/><Footer/></>
+      },
+      {
+        path:'aboutus',
+        element:<><Navbar/><Aboutus/><Footer/></>
+      },
+      {
+        path:'contactus',
+        element:<><Navbar/><Contactus/><Footer/></>
+      },
+      {
+        path:'dashboard',
+        element:<ProtectedRoute adminOnly={true}><Navbar/><Dashboard/></ProtectedRoute>,
+        children:[
+          { path:"sales", element: <AdminSales/> },
+          { path:"add-product", element: <AddProduct/> },
+          { path:"products", element: <AdminProduct/> },
+          { path:"orders", element: <AdminOrders/> },
+          { path:"users/orders/:userId", element: <ShowUserOrders/> },
+          { path:"users", element: <AdminUsers/> },
+          { path:"users/:id", element: <UserInfo/> },
+        ]
+      }
     ]
-  },
-
-])
+  }
+]);
 
 const App = () => {
   return (
