@@ -102,7 +102,7 @@ const ProductCard = ({ product }) => {
       <div className="w-full h-full aspect-square overflow-hidden">
         <img
           onClick={() => navigate(`/product/${_id}`)}
-          src={productImg[0]?.url}
+          src={productImg?.[0]?.url || "/placeholder.png"}
           alt={productName}
           className="w-full h-full transition-transform duration-300 hover:scale-105"
         />
