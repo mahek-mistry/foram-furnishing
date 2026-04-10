@@ -92,11 +92,11 @@ const router = createBrowserRouter([
       },
       {
         path:'address',
-        element:<ProtectedRoute><AddressForm/></ProtectedRoute>
+        element:<ProtectedRoute><Navbar/><AddressForm/><Footer/></ProtectedRoute>
       },
       {
         path:'order-success',
-        element:<ProtectedRoute><OrderSuccess/></ProtectedRoute>
+        element:<ProtectedRoute><Navbar/><OrderSuccess/><Footer/></ProtectedRoute>
       },
       {
         path:'service',

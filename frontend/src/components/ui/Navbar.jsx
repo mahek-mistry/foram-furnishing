@@ -189,14 +189,14 @@ const Navbar = () => {
           {user ? (
             <Button
               onClick={logoutHandler}
-              className="bg-pink-600 text-white cursor-pointer"
+              className="bg-red-500 hover:bg-red-600 text-white cursor-pointer transition-all px-6 rounded-xl"
             >
               Logout
             </Button>
           ) : (
             <Button
               onClick={() => navigate("/login")}
-              className="bg-gradient from-blue-500 to-purple-500 text-white cursor-pointer"
+              className="bg-gradient-to-r from-blue-600 to-indigo-600 text-white cursor-pointer hover:shadow-md transition-all px-6 rounded-xl"
             >
               Login
             </Button>
@@ -282,7 +282,7 @@ const Navbar = () => {
                     logoutHandler();
                     setMobileMenuOpen(false);
                   }}
-                  className="bg-pink-600 text-white w-full cursor-pointer"
+                  className="bg-red-500 text-white w-full cursor-pointer py-5 rounded-xl"
                 >
                   Logout
                 </Button>
@@ -292,7 +292,7 @@ const Navbar = () => {
                     navigate("/login");
                     setMobileMenuOpen(false);
                   }}
-                  className="bg-gradient from-blue-500 to-purple-500 text-white w-full cursor-pointer"
+                  className="bg-gradient-to-r from-blue-600 to-indigo-600 text-white w-full cursor-pointer py-5 rounded-xl"
                 >
                   Login
                 </Button>

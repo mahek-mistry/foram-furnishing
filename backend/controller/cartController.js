@@ -90,7 +90,8 @@ export const getCart = async (req, res) => {
 export const addToCart = async (req, res) => {
   try {
     const userId = req.id;
-    const { productId } = req.body;
+    const { productId, quantity } = req.body;
+    const qtyToAdd = Number(quantity) || 1;
 
     // ✅ Validate
     if (!productId) {
@@ -109,7 +110,7 @@ export const addToCart = async (req, res) => {
       });
     }
 
-    // ✅ Find or create cart - FIXED: use userId not user
+    // ✅ Find or create cart
     let cart = await Cart.findOne({ userId });
 
     if (!cart) {
@@ -123,22 +124,36 @@ export const addToCart = async (req, res) => {
       cart.items = cart.items.filter(item => item && item.productId);
     }
 
-    // ✅ Check if already in cart - FIXED: use productId not product
+    // ✅ Check if already in cart
     const itemIndex = cart.items.findIndex(
       (item) => item.productId?.toString() === productId
     );
 
     if (itemIndex > -1) {
-      // already exists → increase quantity
-      // Add a fallback in case old items have no quantity or price
-      cart.items[itemIndex].quantity = (cart.items[itemIndex].quantity || 0) + 1;
+      // Check limit of 5
+      const newQty = (cart.items[itemIndex].quantity || 0) + qtyToAdd;
+      if (newQty > 5) {
+        return res.status(400).json({
+          success: false,
+          message: `Maximum 5 items allowed. You already have ${cart.items[itemIndex].quantity} in cart.`,
+        });
+      }
+
+      cart.items[itemIndex].quantity = newQty;
       cart.items[itemIndex].price = cart.items[itemIndex].price || product.productPrice;
     } else {
-      // new item - FIXED: use productId not product, added price
+      // Check limit of 5 for new item
+      if (qtyToAdd > 5) {
+        return res.status(400).json({
+          success: false,
+          message: "Maximum 5 items allowed per product.",
+        });
+      }
+
       cart.items.push({
         productId,
-        quantity: 1,
-        price: product.productPrice || 0, // Fallback if product has no price
+        quantity: qtyToAdd,
+        price: product.productPrice || 0,
       });
     }
 
@@ -182,8 +197,16 @@ export const updateQuantity = async (req, res) => {
     const item = cart.items.find(item => item.productId?.toString() === productId)
     if (!item) return res.status(404).json({ success: false, message: "Item not found" })
 
-    if (type === "increase") item.quantity += 1
-    if (type === "decrease" && item.quantity > 1) item.quantity -= 1
+    if (type === "increase") {
+      if (item.quantity >= 5) {
+        return res.status(400).json({
+          success: false,
+          message: "Maximum 5 items allowed per product.",
+        });
+      }
+      item.quantity += 1;
+    }
+    if (type === "decrease" && item.quantity > 1) item.quantity -= 1;
 
     cart.totalPrice = cart.items.reduce((acc, item) => acc + (item.price || 0) * (item.quantity || 1), 0)
 

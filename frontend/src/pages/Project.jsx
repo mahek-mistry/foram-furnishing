@@ -100,12 +100,12 @@ const Project = () => {
                 organic textures and bespoke cabinetry.
               </p>
 
-              <a
+              {/* <a
                 href="/projects/palm-residence"
                 className="text-blue-600 font-medium mt-4 inline-block"
               >
                 View Full Case Study →
-              </a>
+              </a> */}
             </div>
           </div>
 
@@ -131,12 +131,12 @@ const Project = () => {
                 high-productivity workspace.
               </p>
 
-              <a
+              {/* <a
                 href="/projects/modern-office"
                 className="text-blue-600 font-medium mt-4 inline-block"
               >
                 View Full Case Study →
-              </a>
+              </a> */}
             </div>
           </div>
         </div>
@@ -210,8 +210,6 @@ const Project = () => {
           </div>
         </div>
       </section>
-      import item1 from "../assets/item1.jpeg"; import item2 from
-      "../assets/item2.jpeg"; import item3 from "../assets/item3.jpeg";
       <section className="bg-gray-100 py-20 px-6">
         <div className="max-w-7xl mx-auto">
           {/* Heading */}
@@ -244,8 +242,8 @@ const Project = () => {
                 />
 
                 <div>
-                  <h4 className="font-semibold text-sm">Marcus Sterling</h4>
-                  <p className="text-xs text-gray-500">Villa Owner, Dubai</p>
+                  <h4 className="font-semibold text-sm">Aarav Sharma</h4>
+                  <p className="text-xs text-gray-500">Mumbai</p>
                 </div>
               </div>
             </div>
@@ -268,9 +266,9 @@ const Project = () => {
                 />
 
                 <div>
-                  <h4 className="font-semibold text-sm">Sarah Jenkins</h4>
+                  <h4 className="font-semibold text-sm">Aditya Verma</h4>
                   <p className="text-xs text-gray-500">
-                    Director, Nexus Realty
+                    Ahmedabad
                   </p>
                 </div>
               </div>
@@ -293,8 +291,8 @@ const Project = () => {
                 />
 
                 <div>
-                  <h4 className="font-semibold text-sm">David Chen</h4>
-                  <p className="text-xs text-gray-500">Homeowner</p>
+                  <h4 className="font-semibold text-sm">Kavya Nair</h4>
+                  <p className="text-xs text-gray-500">Surat</p>
                 </div>
               </div>
             </div>

@@ -223,8 +223,8 @@ const handleSubmit = async (e) => {
               <div>
                 <p className="font-medium">Call Us Directly</p>
                 <p className="text-gray-500 text-sm">
-                  +1 (212) 555-0198 <br />
-                  +1 (212) 555-0199
+                  +91 9898384604 <br />
+                  +91 9876543210
                 </p>
               </div>
             </div>
