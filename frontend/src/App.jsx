@@ -32,6 +32,7 @@ import ForgotPassword from './pages/ForgotPassword'
 import Profile from './pages/Profile'
 import RootLayout from "./components/RootLayout";
 import AdminContact from './pages/admin/AdminContact'
+// import Inventory from './pages/admin/Inventory'
 
 // const router = createBrowserRouter([
 //   {
@@ -265,6 +266,7 @@ const router = createBrowserRouter([
           { path:"users", element: <AdminUsers/> },
           { path:"users/:id", element: <UserInfo/> },
           { path:"contact", element: <AdminContact/> },
+          // { path:"inventory", element: <Inventory/> },
         ]
       }
     ]
