@@ -6,7 +6,7 @@ function AdminContact() {
 
   const fetchContacts = async () => {
     try {
-      const res = await axios.get("http://localhost:8000/api/contact");
+      const res = await axios.get("http://localhost:8000/api/v1/contact")
       console.log(res.data); // 🔥 DEBUG
       setContacts(res.data);
     } catch (error) {
@@ -20,13 +20,13 @@ function AdminContact() {
 
   // ✅ MARK AS READ
   const handleRead = async (id) => {
-    await axios.put(`http://localhost:8000/api/contact/${id}/read`);
+    await axios.put(`http://localhost:8000/api/v1/contact/${id}/read`);
     fetchContacts();
   };
 
   // ✅ DELETE
   const handleDelete = async (id) => {
-    await axios.delete(`http://localhost:8000/api/contact/${id}`);
+    await axios.delete(`http://localhost:8000/api/v1/contact/${id}`);
     fetchContacts();
   };
 
