@@ -9,18 +9,24 @@ const OrderCard = ({ userOrder = [], downloadInvoice }) => {
   const navigate = useNavigate();
 
   const handleCancelRequest = async (id) => {
-  try {
-    const res = await axios.post(
-      `http://localhost:8000/api/v1/orders/cancel-request/${id}`
-    );
+    try {
+      const accessToken = localStorage.getItem("accessToken");
+      const res = await axios.post(
+        `http://localhost:8000/api/v1/orders/cancel-request/${id}`,
+        {},
+        {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        }
+      );
 
-    alert("Cancel request sent");
-    console.log(res.data);
-
-  } catch (error) {
-    console.error(error);
-  }
-};
+      alert("Cancel request sent");
+      console.log(res.data);
+    } catch (error) {
+      console.error(error);
+    }
+  };
   return (
     <div className="pr-20 flex flex-col gap-6">
       <div className="w-full p-6">

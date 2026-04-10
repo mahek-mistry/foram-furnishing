@@ -1,128 +1,117 @@
-import { useEffect, useState } from "react";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import axios from "axios";
+import React, { useState, useEffect } from "react";
+import {
+  AreaChart,
+  Area,
+  ResponsiveContainer,
+  Tooltip,
+  XAxis,
+  YAxis
+} from "recharts";
 
-function AdminContact() {
-  const [contacts, setContacts] = useState([]);
+const AdminSales = () => {
 
-  const fetchContacts = async () => {
+  const [stats, setStats] = useState({
+    totalUsers: 0,
+    totalProducts: 0,
+    totalOrders: 0,
+    totalSales: 0,
+    sales: []
+  });
+
+  const fetchStats = async () => {
     try {
-      const res = await axios.get("http://localhost:8000/api/contact");
-      console.log(res.data); // 🔥 DEBUG
-      setContacts(res.data);
+      const accessToken = localStorage.getItem("accessToken");
+
+      const res = await axios.get(
+        `${import.meta.env.VITE_URL}/api/v1/orders/sales`,
+        {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        }
+      );
+
+      if (res.data.success) {
+        setStats(res.data);
+      }
     } catch (error) {
-      console.log(error);
+      console.error("Error fetching admin stats:", error);
     }
   };
 
   useEffect(() => {
-    fetchContacts();
+    fetchStats();
   }, []);
 
-  // ✅ MARK AS READ
-  const handleRead = async (id) => {
-    await axios.put(`http://localhost:8000/api/contact/${id}/read`);
-    fetchContacts();
-  };
-
-  // ✅ DELETE
-  const handleDelete = async (id) => {
-    await axios.delete(`http://localhost:8000/api/contact/${id}`);
-    fetchContacts();
-  };
-
   return (
-    <div className="flex-1">
-  <div className="pl-[350px] bg-gray-100 py-20 pr-20 mx-auto px-4 min-h-screen">
-    
-    <h2 className="text-2xl font-bold mb-6">Contact Messages</h2>
+    <div className="pl-[350px] bg-gray-100 py-20 pr-20 mx-auto px-4">
+      <div className="p-6 grid gap-6 lg:grid-cols-4">
 
-    <div className="bg-white rounded-xl shadow-lg p-4 overflow-x-auto">
-      
-      <table className="min-w-full text-sm text-left border">
-        
-        <thead className="bg-gray-200 text-gray-700">
-          <tr>
-            <th className="p-3">Name</th>
-            <th className="p-3">Email</th>
-            <th className="p-3">Phone</th>
-            <th className="p-3">Inquiry</th>
-            <th className="p-3">Style</th>
-            <th className="p-3">Space</th>
-            <th className="p-3">Location</th>
-            <th className="p-3">Message</th>
-            <th className="p-3">Status</th>
-            <th className="p-3">Actions</th>
-          </tr>
-        </thead>
+        <Card className="bg-blue-500 text-white shadow">
+          <CardHeader>
+            <CardTitle>Total Users</CardTitle>
+          </CardHeader>
+          <CardContent className="text-2xl font-bold">
+            {stats.totalUsers}
+          </CardContent>
+        </Card>
 
-        <tbody>
-          {contacts.length === 0 ? (
-            <tr>
-              <td colSpan="10" className="text-center p-5">
-                No Data Found
-              </td>
-            </tr>
-          ) : (
-            contacts.map((c) => (
-              <tr key={c._id} className="border-t hover:bg-gray-50">
-                
-                <td className="p-3">{c.fullName}</td>
-                <td className="p-3">{c.email}</td>
-                <td className="p-3">{c.phone}</td>
-                <td className="p-3">{c.inquiryType}</td>
-                <td className="p-3">{c.projectStyle}</td>
-                <td className="p-3">{c.spaceType}</td>
-                <td className="p-3">{c.location}</td>
+        <Card className="bg-blue-500 text-white shadow">
+          <CardHeader>
+            <CardTitle>Total Products</CardTitle>
+          </CardHeader>
+          <CardContent className="text-2xl font-bold">
+            {stats.totalProducts}
+          </CardContent>
+        </Card>
 
-                <td className="p-3 max-w-[200px] truncate">
-                  {c.message}
-                </td>
+        <Card className="bg-blue-500 text-white shadow">
+          <CardHeader>
+            <CardTitle>Total Orders</CardTitle>
+          </CardHeader>
+          <CardContent className="text-2xl font-bold">
+            {stats.totalOrders}
+          </CardContent>
+        </Card>
 
-                <td className="p-3">
-                  {c.isRead ? (
-                    <span className="text-green-600 font-semibold">
-                      Read
-                    </span>
-                  ) : (
-                    <span className="text-red-500 font-semibold">
-                      Unread
-                    </span>
-                  )}
-                </td>
+        <Card className="bg-blue-500 text-white shadow">
+          <CardHeader>
+            <CardTitle>Total Sales</CardTitle>
+          </CardHeader>
+          <CardContent className="text-2xl font-bold">
+            ₹{stats.totalSales}
+          </CardContent>
+        </Card>
 
-                <td className="p-3">
-                  <div className="flex gap-2">
-                    
-                    {!c.isRead && (
-                      <button
-                        onClick={() => handleRead(c._id)}
-                        className="bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded"
-                      >
-                        Mark Read
-                      </button>
-                    )}
+        {/* Sales Chart */}
 
-                    <button
-                      onClick={() => handleDelete(c._id)}
-                      className="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded"
-                    >
-                      Delete
-                    </button>
+        <Card className="lg:col-span-4">
+          <CardHeader>
+            <CardTitle>Sales (Last 30 Days)</CardTitle>
+          </CardHeader>
 
-                  </div>
-                </td>
+          <CardContent className="h-[300px]">
+            <ResponsiveContainer width="100%" height="100%">
+              <AreaChart data={stats.sales}>
+                <XAxis dataKey="date" />
+                <YAxis />
+                <Tooltip />
+                <Area
+                  type="monotone"
+                  dataKey="amount"
+                  stroke="#88c2ef"
+                  fill="#5b6483"
+                />
+              </AreaChart>
+            </ResponsiveContainer>
+          </CardContent>
+        </Card> 
 
-              </tr>
-            ))
-          )}
-        </tbody>
-
-      </table>
-
+      </div>
     </div>
-  </div>
-</div>
   );
-}
+};
 
-export default AdminContact;
+export default AdminSales;

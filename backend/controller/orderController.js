@@ -486,12 +486,45 @@ export const cancelRequestOrder = async (req, res) => {
     }
 
     order.orderStatus = "Cancel Requested";
+    order.cancelRequest = true;
 
     await order.save();
 
     res.status(200).json({
       success: true,
       message: "Cancel request sent",
+      order,
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
+
+export const approveCancelOrder = async (req, res) => {
+  try {
+    const orderId = req.params.id;
+
+    const order = await Order.findById(orderId);
+
+    if (!order) {
+      return res.status(404).json({
+        success: false,
+        message: "Order not found",
+      });
+    }
+
+    order.orderStatus = "Cancelled";
+    order.cancelApproved = true;
+
+    await order.save();
+
+    res.status(200).json({
+      success: true,
+      message: "Order cancellation approved successfully",
       order,
     });
   } catch (error) {
