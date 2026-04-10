@@ -97,7 +97,7 @@ const ProductDesc = ({ product }) => {
 
         <Button
           onClick={() => addToCart(product._id)}
-          className="bg-blue-600 hover:bg-blue-700"
+          className="bg-blue-600 hover:bg-blue-700 text-white"
         >
           Add to Cart 🛒
         </Button>

@@ -128,7 +128,7 @@ const ProductCard = ({ product }) => {
 
         <Button
           onClick={addToCart}
-          className="bg-blue-600 mb-3 w-full"
+          className="bg-blue-600 mb-3 w-full text-white"
         >
           <ShoppingCart className="mr-2 h-4 w-4" />
           Add to Cart
