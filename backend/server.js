@@ -6,11 +6,8 @@ import productRoute from './routes/productRoute.js'
 import cartRoute from './routes/cartRoute.js'
 import orderRoute from './routes/orderRoute.js'
 import cors from 'cors'
-import { Cart } from './models/cartModel.js'
 import wishlistRoutes from "./routes/wishlistRoutes.js";
 import contactRoutes from "./routes/contactRoutes.js";
-
-// dotenv.config();
 
 
 const app = express()
@@ -27,15 +24,8 @@ app.use('/api/v1/product', productRoute)
 app.use('/api/v1/cart', cartRoute)
 app.use('/api/v1/orders', orderRoute)
 app.use("/api/v1/wishlist", wishlistRoutes);
-app.use("/api", contactRoutes);
+app.use("/api/v1/contact", contactRoutes);
 
-
-// mongoose
-//   .connect(process.env.MONGO_URI)
-//   .then(() => console.log("MongoDB Connected"))
-//   .catch((err) => console.log(err));
-
-//http://localhost:8000/api/v1/user/register
 
 app.listen(PORT,()=>{
     connectDB()

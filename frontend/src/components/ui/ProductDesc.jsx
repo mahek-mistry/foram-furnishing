@@ -14,10 +14,21 @@ const ProductDesc = ({ product }) => {
   const [quantity, setQuantity] = useState(1);
 
   const addToCart = async (productId) => {
+    // ✅ Check login first
+    if (!accessToken) {
+      toast.error("Please login first");
+      return;
+    }
+
+    if (!productId) {
+      toast.error("Invalid product");
+      return;
+    }
+
     try {
       const res = await axios.post(
         "http://localhost:8000/api/v1/cart/add",
-        { productId, quantity },
+        { productId },
         {
           headers: {
             Authorization: `Bearer ${accessToken}`,
@@ -30,8 +41,8 @@ const ProductDesc = ({ product }) => {
         dispatch(setCart(res.data.cart));
       }
     } catch (error) {
-      console.log(error);
-      toast.error("Failed to add product");
+      console.error("Add to Cart Error:", error.response?.data || error.message);
+      toast.error(error.response?.data?.message || "Failed to add product");
     }
   };
 

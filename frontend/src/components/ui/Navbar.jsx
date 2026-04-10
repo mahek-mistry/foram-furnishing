@@ -1,9 +1,9 @@
-import React from "react";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import axios from "axios";
 import { toast } from "sonner";
 import { useNavigate } from "react-router-dom";
-import { ShoppingCart, Heart } from "lucide-react";
+import { ShoppingCart, Heart, Menu, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useDispatch, useSelector } from "react-redux";
 import { setUser } from "@/redux/userSlice";
@@ -15,6 +15,7 @@ const Navbar = () => {
 
   // ✅ FIXED HERE (only change)
   const { items } = useSelector((store) => store.wishlist);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   const admin = user?.role === "admin" ? true : false;
   const dispatch = useDispatch();
@@ -62,7 +63,7 @@ const Navbar = () => {
           FORAM <span className="text-blue-600">FURNISHING</span>
         </div>
 
-        {/* Menu */}
+        {/* Desktop Menu */}
         <nav className="hidden md:flex items-center gap-8 text-sm text-gray-700">
           <ul className="flex gap-7 items-center text-lg">
             <Link to={"/"}>
@@ -201,7 +202,105 @@ const Navbar = () => {
             </Button>
           )}
         </nav>
+
+        {/* Mobile Icons + Menu Button */}
+        <div className="md:hidden flex items-center gap-4">
+          {/* ❤️ Wishlist Icon */}
+          <Link to={"/wishlist"} className="relative">
+            <Heart size={20} />
+            <span className="bg-red-500 rounded-full absolute text-white -top-3 -right-3 text-xs px-1">
+              {items?.length || 0}
+            </span>
+          </Link>
+
+          {/* 🛒 Cart */}
+          <Link to={"/cart"} className="relative">
+            <ShoppingCart size={20} />
+            <span className="bg-blue-500 rounded-full absolute text-white -top-3 -right-3 text-xs px-1">
+              {cart?.items?.length ||
+                cart?.products?.length ||
+                cart?.length ||
+                0}
+            </span>
+          </Link>
+
+          {/* Hamburger Menu Button */}
+          <button
+            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+            className="p-2"
+          >
+            {mobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
+          </button>
+        </div>
       </div>
+
+      {/* Mobile Menu */}
+      {mobileMenuOpen && (
+        <div className="md:hidden bg-white border-t">
+          <ul className="flex flex-col gap-4 p-6 text-gray-700">
+            <Link to="/" onClick={() => setMobileMenuOpen(false)}>
+              <li className="cursor-pointer hover:text-blue-600">Home</li>
+            </Link>
+
+            <Link to="/product" onClick={() => setMobileMenuOpen(false)}>
+              <li className="cursor-pointer hover:text-blue-600">Product</li>
+            </Link>
+
+            <Link to="/service" onClick={() => setMobileMenuOpen(false)}>
+              <li className="cursor-pointer hover:text-blue-600">Service</li>
+            </Link>
+
+            <Link to="/project" onClick={() => setMobileMenuOpen(false)}>
+              <li className="cursor-pointer hover:text-blue-600">Project</li>
+            </Link>
+
+            <Link to="/aboutus" onClick={() => setMobileMenuOpen(false)}>
+              <li className="cursor-pointer hover:text-blue-600">About US</li>
+            </Link>
+
+            <Link to="/contactus" onClick={() => setMobileMenuOpen(false)}>
+              <li className="cursor-pointer hover:text-blue-600">Contact US</li>
+            </Link>
+
+            {user && (
+              <Link to={`/profile/${user._id}`} onClick={() => setMobileMenuOpen(false)}>
+                <li className="cursor-pointer hover:text-blue-600">Hello, {user.firstName}</li>
+              </Link>
+            )}
+
+            {admin && (
+              <Link to="/dashboard/sales" onClick={() => setMobileMenuOpen(false)}>
+                <li className="cursor-pointer hover:text-blue-600">Dashboard</li>
+              </Link>
+            )}
+
+            {/* Auth Buttons */}
+            <div className="mt-4 pt-4 border-t">
+              {user ? (
+                <Button
+                  onClick={() => {
+                    logoutHandler();
+                    setMobileMenuOpen(false);
+                  }}
+                  className="bg-pink-600 text-white w-full cursor-pointer"
+                >
+                  Logout
+                </Button>
+              ) : (
+                <Button
+                  onClick={() => {
+                    navigate("/login");
+                    setMobileMenuOpen(false);
+                  }}
+                  className="bg-gradient from-blue-500 to-purple-500 text-white w-full cursor-pointer"
+                >
+                  Login
+                </Button>
+              )}
+            </div>
+          </ul>
+        </div>
+      )}
     </header>
   );
 };

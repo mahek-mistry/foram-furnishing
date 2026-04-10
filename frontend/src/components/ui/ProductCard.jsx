@@ -29,27 +29,36 @@ const ProductCard = ({ product }) => {
 
   // ✅ Add to Cart
   const addToCart = async () => {
-    try {
+  if (!accessToken) {
+    toast.error("Please login first");
+    return;
+  }
 
-      const res = await axios.post(
-        "http://localhost:8000/api/v1/cart/add",
-        { productId: _id },
-        {
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-          },
-        }
-      );
+  if (!_id) {
+    toast.error("Invalid product");
+    return;
+  }
 
-      if (res.data.success) {
-        toast.success("Product added to cart");
-        dispatch(setCart(res.data.cart));
+  try {
+    const res = await axios.post(
+      "http://localhost:8000/api/v1/cart/add",
+      { productId: _id },
+      {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
       }
+    );
 
-    } catch (error) {
-      toast.error("Error adding to cart");
+    if (res.data.success) {
+      toast.success("Product added to cart");
+      dispatch(setCart(res.data.cart));
     }
-  };
+  } catch (error) {
+    console.log(error.response?.data);
+    toast.error(error.response?.data?.message || "Error adding to cart");
+  }
+};
 
   // ✅ FIXED: Toggle Wishlist (updates Redux instantly)
   const toggleWishlist = async () => {
@@ -102,7 +111,7 @@ const ProductCard = ({ product }) => {
       <div className="w-full h-full aspect-square overflow-hidden">
         <img
           onClick={() => navigate(`/product/${_id}`)}
-          src={productImg?.[0]?.url || "/placeholder.png"}
+          src={productImg[0]?.url}
           alt={productName}
           className="w-full h-full transition-transform duration-300 hover:scale-105"
         />

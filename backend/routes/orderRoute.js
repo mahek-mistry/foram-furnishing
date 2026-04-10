@@ -1,33 +1,24 @@
 import express from "express";
-import { isAdmin, isAuthenticated } from "../middleware/isAuthenticated.js";
+
 import {
-  createCODOrder,
   createOrder,
-  downloadInvoice,
-  getAllOrdersAdmin,
-  getMyOrder,
-  getSalesData,
-  getUserOrders,
-  updateOrderStatus,
   verifyPayment,
+  getMyOrder,
+  cancelRequestOrder, // ✅ ADD THIS
 } from "../controller/orderController.js";
 
 const router = express.Router();
 
-router.post("/create-order", isAuthenticated, createOrder);
-router.post("/verify-payment", isAuthenticated, verifyPayment);
-router.get("/myorder", isAuthenticated, getMyOrder);
-router.get("/invoice/:id", isAuthenticated, downloadInvoice);
-router.get("/all", isAuthenticated, isAdmin, getAllOrdersAdmin);
-router.get("/user-order/:userId", isAuthenticated, isAdmin, getUserOrders);
-router.get("/sales", isAuthenticated, isAdmin, getSalesData);
-router.put(
-"/update-order-status/:id",
-isAuthenticated,
-isAdmin,
-updateOrderStatus
-)
-router.post("/create-cod-order", isAuthenticated, createCODOrder);
+// Create order
+router.post("/create", createOrder);
 
+// Verify payment
+router.post("/verify", verifyPayment);
+
+// Get logged-in user orders
+router.get("/my-orders", getMyOrder);
+
+// Cancel request ✅ IMPORTANT
+router.post("/cancel-request/:id", cancelRequestOrder);
 
 export default router;
