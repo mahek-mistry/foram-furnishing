@@ -13,6 +13,15 @@ import Contactus from './pages/Contactus'
 import Product from './pages/Products'
 import Project from './pages/Project'
 import Service from './pages/Service'
+import MattressSolutions from './pages/MattressSolutions'
+import CurtainDesigning from './pages/CurtainDesigning'
+import BlindsSolutions from './pages/BlindsSolutions'
+import SofaUpholstery from './pages/SofaUpholstery'
+import WallpaperServices from './pages/WallpaperServices'
+import FlooringServices from './pages/FlooringServices'
+import ProfileShutters from './pages/ProfileShutters'
+import BedLinenCollection from './pages/BedLinenCollection'
+import StretchCeiling from './pages/StretchCeiling'
 import Cart from './pages/Cart'
 import Dashboard from './pages/Dashboard'
 import AdminSales from './pages/admin/AdminSales'
@@ -101,6 +110,42 @@ const router = createBrowserRouter([
       {
         path:'service',
         element:<><Navbar/><Service/><Footer/></>
+      },
+      {
+        path:'service/mattress-solutions',
+        element:<><Navbar/><MattressSolutions/><Footer/></>
+      },
+      {
+        path:'service/curtain-designing',
+        element:<><Navbar/><CurtainDesigning/><Footer/></>
+      },
+      {
+        path:'service/blinds-solutions',
+        element:<><Navbar/><BlindsSolutions/><Footer/></>
+      },
+      {
+        path:'service/sofa-upholstery',
+        element:<><Navbar/><SofaUpholstery/><Footer/></>
+      },
+      {
+        path:'service/wallpaper-services',
+        element:<><Navbar/><WallpaperServices/><Footer/></>
+      },
+      {
+        path:'service/flooring-solutions',
+        element:<><Navbar/><FlooringServices/><Footer/></>
+      },
+      {
+        path:'service/profile-shutters',
+        element:<><Navbar/><ProfileShutters/><Footer/></>
+      },
+      {
+        path:'service/bed-linen-collection',
+        element:<><Navbar/><BedLinenCollection/><Footer/></>
+      },
+      {
+        path:'service/stretch-ceiling',
+        element:<><Navbar/><StretchCeiling/><Footer/></>
       },
       {
         path:'project',

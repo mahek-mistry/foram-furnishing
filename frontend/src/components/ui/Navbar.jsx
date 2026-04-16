@@ -113,7 +113,7 @@ const Navbar = () => {
                 Project
               </li>
             </Link>
-
+{/* 
             <Link to={"/aboutus"}>
               <li
                 className="relative cursor-pointer hover:text-blue-600 transition duration-300 
@@ -124,7 +124,7 @@ const Navbar = () => {
               >
                 About US
               </li>
-            </Link>
+            </Link> */}
 
             <Link to={"/contactus"}>
               <li
