@@ -16,6 +16,13 @@ const UserInfo = () => {
   const dispatch = useDispatch();
   const [updateUser, setUpdateUser] = useState(null);
   const [file, setFile] = useState(null);
+  const [role, setRole] = useState("");
+
+useEffect(() => {
+  if (updateUser?.role) {
+    setRole(updateUser.role); // "admin" or "user"
+  }
+}, [updateUser]);
 
   //const { user } = useSelector((store) => store.user);
   const params = useParams();
@@ -218,7 +225,7 @@ const UserInfo = () => {
             />
           </div>
 
-          <div className="flex gap-3 items-center">
+          {/* <div className="flex gap-3 items-center">
             <Label className="block text-sm font-medium">Role :</Label>
             <RadioGroup
               value={updateUser?.role}
@@ -236,7 +243,7 @@ const UserInfo = () => {
                 <Label htmlFor="admin">Admin</Label>
               </div>
             </RadioGroup>
-          </div>
+          </div> */}
           {/* Submit Button */}
           <button
             type="submit"

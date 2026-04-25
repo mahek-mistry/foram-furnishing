@@ -6,7 +6,7 @@ const ProductImg = ({ images = [] }) => {
   const [zoomStyle, setZoomStyle] = useState({});
 
   useEffect(() => {
-    if (images.length > 0) {
+    if (images.length > 0 && images[0]?.url) {
       setMainImg(images[0].url);
     }
   }, [images]);
@@ -19,14 +19,12 @@ const ProductImg = ({ images = [] }) => {
 
     setZoomStyle({
       transformOrigin: `${x}% ${y}%`,
-      transform: "scale(2)",
+      transform: "scale(1.5)",
     });
   };
 
   const handleMouseLeave = () => {
-    setZoomStyle({
-      transform: "scale(1)",
-    });
+    setZoomStyle({ transform: "scale(1)" });
   };
 
   if (!images.length) return <p>No images available</p>;
@@ -39,23 +37,21 @@ const ProductImg = ({ images = [] }) => {
         {images.map((img, index) => (
           <img
             key={index}
-            src={img.url}
-            alt=""
-            onClick={() => setMainImg(img.url)}
-            className="cursor-pointer w-20 h-20 border shadow-lg object-cover"
+            src={img?.url || "/placeholder.png"}
+            onClick={() => setMainImg(img?.url)}
+            className="cursor-pointer w-20 h-20 border object-cover"
           />
         ))}
       </div>
 
-      {/* Main Image with Zoom */}
-      <div className="overflow-hidden border shadow-lg w-[500px] h-[500px]">
+      {/* Main Image */}
+      <div className="overflow-hidden border w-[500px] h-[500px] flex items-center justify-center">
         <img
-          src={mainImg}
-          alt="product"
+          src={mainImg || "/placeholder.png"}
           onMouseMove={handleMouseMove}
           onMouseLeave={handleMouseLeave}
           style={zoomStyle}
-          className="w-full h-full object-cover transition-transform duration-200"
+          className="max-w-full max-h-full object-contain transition-transform duration-200"
         />
       </div>
 

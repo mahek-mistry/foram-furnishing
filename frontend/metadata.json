@@ -1,0 +1,5 @@
+{
+  "name": "MetalTalk",
+  "description": "A 3D metallic-themed messaging app with real-time voice AI integration.",
+  "requestFramePermissions": ["microphone", "camera"]
+}

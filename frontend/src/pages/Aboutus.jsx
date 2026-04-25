@@ -21,7 +21,7 @@ const Aboutus = () => {
         <div className="relative z-10">
           <h1 className="text-5xl font-bold mb-4">Our Story</h1>
           <p className="max-w-xl mx-auto text-gray-200">
-            Crafting comfort and elegance since 1998. Discover the heritage of
+            Crafting comfort and elegance since 2022. Discover the heritage of
             meticulous craftsmanship and timeless design.
           </p>
         </div>

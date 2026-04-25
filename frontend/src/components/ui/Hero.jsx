@@ -50,7 +50,7 @@ const Hero = () => {
         {slides.map((slide, index) => (
           <div
             key={index}
-            className="w-full h-screen flex-shrink-0 relative"
+            className="w-full h-screen shrink-0 relative"
           >
             {/* Image */}
             <img
@@ -114,3 +114,5 @@ const Hero = () => {
 };
 
 export default Hero;
+
+

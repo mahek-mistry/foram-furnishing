@@ -4,16 +4,29 @@ import { useDispatch } from "react-redux";
 import axios from "axios";
 import { toast } from "sonner";
 import { setCart } from "@/redux/productSlice";
+import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { Star } from "lucide-react";
+import { Star, Plus, Minus } from "lucide-react";
 
 const ProductDesc = ({ product }) => {
 
   const accessToken = localStorage.getItem("accessToken");
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const [quantity, setQuantity] = useState(1);
 
   const addToCart = async (productId) => {
+    // ✅ Check login first
+    if (!accessToken) {
+      toast.error("Please login first");
+      return;
+    }
+
+    if (!productId) {
+      toast.error("Invalid product");
+      return;
+    }
+
     try {
       const res = await axios.post(
         "http://localhost:8000/api/v1/cart/add",
@@ -28,10 +41,11 @@ const ProductDesc = ({ product }) => {
       if (res.data.success) {
         toast.success("Product added to cart 🛒");
         dispatch(setCart(res.data.cart));
+        navigate("/cart");
       }
     } catch (error) {
-      console.log(error);
-      toast.error("Failed to add product");
+      console.error("Add to Cart Error:", error.response?.data || error.message);
+      toast.error(error.response?.data?.message || "Failed to add product");
     }
   };
 
@@ -68,17 +82,30 @@ const ProductDesc = ({ product }) => {
         {product.productDesc}
       </p>
 
-      {/* Quantity */}
       <div className="flex gap-3 items-center">
         <p className="font-semibold">Quantity :</p>
 
-        <Input
-          type="number"
-          className="w-16"
-          value={quantity}
-          min={1}
-          onChange={(e) => setQuantity(e.target.value)}
-        />
+        <div className="flex items-center gap-4 bg-gray-100 p-2 rounded-xl">
+          <button
+            onClick={() => setQuantity((prev) => Math.max(1, prev - 1))}
+            disabled={quantity <= 1}
+            className="p-1 hover:bg-white rounded-lg transition disabled:opacity-30 disabled:hover:bg-transparent"
+          >
+            <Minus size={18} />
+          </button>
+          
+          <span className="text-lg font-bold w-4 text-center">
+            {quantity}
+          </span>
+
+          <button
+            onClick={() => setQuantity((prev) => Math.min(5, prev + 1))}
+            disabled={quantity >= 5}
+            className="p-1 hover:bg-white rounded-lg transition disabled:opacity-30 disabled:hover:bg-transparent"
+          >
+            <Plus size={18} />
+          </button>
+        </div>
       </div>
 
       {/* Buttons */}
@@ -86,7 +113,7 @@ const ProductDesc = ({ product }) => {
 
         <Button
           onClick={() => addToCart(product._id)}
-          className="bg-blue-600 hover:bg-blue-700"
+          className="bg-blue-600 hover:bg-blue-700 text-white"
         >
           Add to Cart 🛒
         </Button>

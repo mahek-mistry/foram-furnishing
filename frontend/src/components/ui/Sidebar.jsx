@@ -1,4 +1,4 @@
-import { LayoutDashboard, Package, PackagePlus, PackageSearch, Users } from 'lucide-react'
+import { LayoutDashboard, Package, PackagePlus, PackageSearch, Users ,Form } from 'lucide-react'
 import React from 'react'
 import { FaRegEdit } from 'react-icons/fa'
 import { NavLink } from 'react-router-dom'
@@ -31,6 +31,11 @@ const Sidebar = () => {
                 to='/dashboard/orders' 
                 className={({isActive}) => `text-xl ${isActive ? "bg-blue-600 text-gray-200" : "bg-transparent"} flex items-center gap-2 font-semi-bold cursor-pointer p-2 rounded-2xl w-full`}>
                 <FaRegEdit /><span>Orders</span>
+            </NavLink>
+            <NavLink 
+                to='/dashboard/contact' 
+                className={({isActive}) => `text-xl ${isActive ? "bg-blue-600 text-gray-200" : "bg-transparent"} flex items-center gap-2 font-semi-bold cursor-pointer p-2 rounded-2xl w-full`}>
+                <Form />    <span>Enquiry details</span>
             </NavLink>
         </div>
     </div>

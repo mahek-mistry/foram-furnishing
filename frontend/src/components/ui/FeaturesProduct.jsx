@@ -4,15 +4,16 @@ import sofa from "../../assets/sofa.jpeg";
 import table from "../../assets/table.jpeg";
 import chair from "../../assets/chair.jpeg";
 import lamp from "../../assets/lamp.jpeg";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 const Products = () => {
+  const navigate = useNavigate();
   const products = [
     {
       category: "LIVING ROOM",
       name: "Royal Velvet Sofa",
       price: "₹2,499",
-      image: sofa,
+      image: sofa ,
     },
     {
       category: "ACCENT PIECES",
@@ -39,7 +40,7 @@ const Products = () => {
       <div className="max-w-7xl mx-auto px-6">
 
         {/* Heading */}
-        <div className="flex justify-between items-center mb-10 flex-wrap gap-4">
+        <div className="flex justify-between items-center mb-10 flex-wrap gap-4" >
           <div>
             <h2 className="text-3xl font-bold text-gray-800">
               Featured Products
@@ -69,7 +70,7 @@ const Products = () => {
             >
               {/* Image */}
               <img
-                src={item.image}
+                src={item.image}  onClick={() => navigate("/product")}
                 alt={item.name}
                 className="w-full h-64 object-cover"
               />

@@ -1,6 +1,50 @@
-import React from "react";
+import { useState } from "react";
+import axios from "axios";
+
+
+
 
 const Contactus = () => {
+  const [formData, setFormData] = useState({
+  fullName: "",
+  email: "",
+  phone: "",
+  inquiryType: "",
+  projectStyle: "",
+  spaceType: "",
+  location: "",
+  message: "",
+});
+
+const handleChange = (e) => {
+  setFormData({
+    ...formData,
+    [e.target.name]: e.target.value,
+  });
+};
+
+const handleSubmit = async (e) => {
+  e.preventDefault();
+
+  try {
+    await axios.post("http://localhost:8000/api/v1/contact", formData);
+    alert("Message sent successfully ✅");
+
+    setFormData({
+      fullName: "",
+      email: "",
+      phone: "",
+      inquiryType: "",
+      projectStyle: "",
+      spaceType: "",
+      location: "",
+      message: "",
+    });
+  } catch (error) {
+    console.log(error);
+    alert("Something went wrong ❌");
+  }
+};
   return (
     <section className="bg-gray-100 py-30 px-30">
       <div className="max-w-7xl mx-auto">
@@ -22,14 +66,19 @@ const Contactus = () => {
           <div className="bg-white p-8 rounded-xl shadow">
             <h2 className="text-lg font-semibold mb-6">📧 Send us a message</h2>
 
-            <form className="space-y-5">
+            <form className="space-y-5" onSubmit={handleSubmit}>
+              {/* Name + Email */}
               <div className="grid md:grid-cols-2 gap-4">
                 <div>
                   <label className="text-sm text-gray-600">Full Name</label>
                   <input
                     type="text"
-                    placeholder="John Doe"
+                    placeholder="Enter your full name"
                     className="w-full border rounded-lg p-3 mt-1"
+                    name="fullName"
+                    value={formData.fullName}
+                    onChange={handleChange}
+                    required
                   />
                 </div>
 
@@ -37,41 +86,111 @@ const Contactus = () => {
                   <label className="text-sm text-gray-600">Email Address</label>
                   <input
                     type="email"
-                    placeholder="john@example.com"
+                    placeholder="abc@example.com"
                     className="w-full border rounded-lg p-3 mt-1"
+                    name="email"
+                    value={formData.email}
+                    onChange={handleChange}
+                    required
                   />
                 </div>
               </div>
 
+              {/* Phone + Inquiry Type */}
               <div className="grid md:grid-cols-2 gap-4">
                 <div>
                   <label className="text-sm text-gray-600">Phone Number</label>
                   <input
                     type="text"
-                    placeholder="+1 (555) 000-0000"
+                    placeholder="+91 9876543210"
                     className="w-full border rounded-lg p-3 mt-1"
+                    name="phone"
+                    value={formData.phone}
+                    onChange={handleChange}
+                    required
                   />
                 </div>
 
                 <div>
                   <label className="text-sm text-gray-600">Inquiry Type</label>
-                  <select className="w-full border rounded-lg p-3 mt-1">
-                    <option>General Inquiry</option>
-                    <option>Interior Design</option>
-                    <option>Furniture</option>
+                  <select 
+                  className="w-full border rounded-lg p-3 mt-1"
+                  name="inquiryType"
+                  value={formData.inquiryType}
+                  onChange={handleChange}
+                  required
+                  >
+                    <option value="">Select Inquiry Type</option>
+                    <option value="interior">Interior Design</option>
+                    <option value="furniture">Furniture</option>
                   </select>
                 </div>
               </div>
 
+              {/* Project Style + Space Type */}
+              <div className="grid md:grid-cols-2 gap-4">
+                <div>
+                  <label className="text-sm text-gray-600">Project Style</label>
+                  <select 
+                  className="w-full border rounded-lg p-3 mt-1"
+                  name="projectStyle"
+                  value={formData.projectStyle}
+                  onChange={handleChange}
+                  required
+                  >
+                    <option value="">Select Style</option>
+                    <option value="modern">Modern</option>
+                    <option value="traditional">Traditional</option>
+                    <option value="minimal">Minimal</option>
+                    <option value="luxury">Luxury</option>
+                  </select>
+                </div>
+
+                <div>
+                  <label className="text-sm text-gray-600">Space Type</label>
+                  <input
+                    type="text"
+                    placeholder="e.g. 2BHK, Kitchen, Office"
+                    className="w-full border rounded-lg p-3 mt-1"
+                    name="spaceType"
+                    value={formData.spaceType}
+                    onChange={handleChange}
+                    required
+                  />
+                </div>
+              </div>
+
+              {/* Location */}
+              <div>
+                <label className="text-sm text-gray-600">
+                  Project Location
+                </label>
+                <input
+                  type="text"
+                  placeholder="e.g. Ahmedabad, Satellite"
+                  className="w-full border rounded-lg p-3 mt-1"
+                  name="location"
+                  value={formData.location}
+                  onChange={handleChange}
+                  required
+                />
+              </div>
+
+              {/* Message */}
               <div>
                 <label className="text-sm text-gray-600">Message</label>
                 <textarea
                   rows="5"
-                  placeholder="Tell us how we can help you..."
+                  placeholder="Tell us about your requirements..."
                   className="w-full border rounded-lg p-3 mt-1"
+                  name="message"
+                  value={formData.message}
+                  onChange={handleChange}
+                  required
                 ></textarea>
               </div>
 
+              {/* Button */}
               <button
                 type="submit"
                 className="w-full bg-blue-600 text-white py-3 rounded-lg font-medium hover:bg-blue-700 transition"
@@ -91,7 +210,9 @@ const Contactus = () => {
               <div>
                 <p className="font-medium">Visit our Showroom</p>
                 <p className="text-gray-500 text-sm">
-                  202, Silver Radiance One Besides Pragati Grand Hotel, Nr Zydus Hospital Hebatpur, Thaltej Rd, Thaltej, Ahmedabad, Gujarat 380059
+                  202, Silver Radiance One Besides Pragati Grand Hotel, Nr Zydus
+                  Hospital Hebatpur, Thaltej Rd, Thaltej, Ahmedabad, Gujarat
+                  380059
                 </p>
               </div>
             </div>
@@ -102,8 +223,8 @@ const Contactus = () => {
               <div>
                 <p className="font-medium">Call Us Directly</p>
                 <p className="text-gray-500 text-sm">
-                  +1 (212) 555-0198 <br />
-                  +1 (212) 555-0199
+                  +91 9898384604 <br />
+                  +91 9876543210
                 </p>
               </div>
             </div>
