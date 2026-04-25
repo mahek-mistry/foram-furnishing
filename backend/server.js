@@ -8,10 +8,12 @@ import orderRoute from './routes/orderRoute.js'
 import cors from 'cors'
 import wishlistRoutes from "./routes/wishlistRoutes.js";
 import contactRoutes from "./routes/contactRoutes.js";
+import consultationRoutes from "./routes/consultationRoutes.js";
 
 
 const app = express()
 const PORT = process.env.PORT || 3000
+
 
 app.use(express.json())
 app.use(cors({
@@ -21,13 +23,14 @@ app.use(cors({
     ],
     credentials: true
 }))
-
+app.use("/uploads", express.static("uploads"));
 app.use('/api/v1/user', userRoute)
 app.use('/api/v1/product', productRoute)
 app.use('/api/v1/cart', cartRoute)
 app.use('/api/v1/orders', orderRoute)
 app.use("/api/v1/wishlist", wishlistRoutes);
 app.use("/api/v1/contact", contactRoutes);
+app.use("/api/v1/consultation", consultationRoutes);
 
 
 app.listen(PORT,()=>{

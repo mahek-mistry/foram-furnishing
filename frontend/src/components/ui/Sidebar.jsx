@@ -37,6 +37,11 @@ const Sidebar = () => {
                 className={({isActive}) => `text-xl ${isActive ? "bg-blue-600 text-gray-200" : "bg-transparent"} flex items-center gap-2 font-semi-bold cursor-pointer p-2 rounded-2xl w-full`}>
                 <Form />    <span>Enquiry details</span>
             </NavLink>
+             <NavLink 
+                to='/dashboard/adminconsultation' 
+                className={({isActive}) => `text-xl ${isActive ? "bg-blue-600 text-gray-200" : "bg-transparent"} flex items-center gap-2 font-semi-bold cursor-pointer p-2 rounded-2xl w-full`}>
+                <Form />    <span>Consultation</span>
+            </NavLink>
         </div>
     </div>
   )

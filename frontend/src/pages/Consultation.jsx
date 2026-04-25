@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import axios from 'axios';
+import { toast } from "react-toastify";
 
 const SERVICE_OPTIONS = [
   'Mattresses',
@@ -111,52 +112,57 @@ const Consultation = () => {
     }
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setErrorMessage('');
-    setSuccessMessage('');
-    setIsSubmitting(true);
+ const handleSubmit = async (e) => {
+  e.preventDefault();
+  setIsSubmitting(true);
 
-    try {
-      const payload = new FormData();
-      Object.entries(formData).forEach(([key, value]) => {
-        if (key === 'photos') {
-          value.forEach((file) => payload.append('photos', file));
-          return;
-        }
-        payload.append(key, value);
-      });
+  try {
+    const payload = new FormData();
 
-      await axios.post('http://localhost:8000/api/v1/contact', payload, {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
-      });
+    Object.entries(formData).forEach(([key, value]) => {
+      if (key === 'photos') {
+        value.forEach((file) => payload.append('photos', file));
+        return;
+      }
+      payload.append(key, value);
+    });
 
-      setSuccessMessage('Consultation request sent successfully. We will reach out within 24 hours.');
-      setFormData({
-        fullName: '',
-        mobileNumber: '',
-        email: '',
-        address: '',
-        city: '',
-        pincode: '',
-        service: '',
-        subservice: '',
-        size: '',
-        budget: '',
-        consultationType: 'Call',
-        siteVisit: 'Yes',
-        photos: [],
-        message: '',
-      });
-    } catch (error) {
-      console.error(error);
-      setErrorMessage('Unable to submit right now. Please try again later.');
-    } finally {
-      setIsSubmitting(false);
-    }
-  };
+    await axios.post('http://localhost:8000/api/v1/consultation', payload, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    });
+
+    // ✅ TOAST SUCCESS
+    toast.success("Form submitted! We will contact you within 24 hours.");
+
+    // reset form
+    setFormData({
+      fullName: '',
+      mobileNumber: '',
+      email: '',
+      address: '',
+      city: '',
+      pincode: '',
+      service: '',
+      subservice: '',
+      size: '',
+      budget: '',
+      consultationType: 'Call',
+      siteVisit: 'Yes',
+      photos: [],
+      message: '',
+    });
+
+  } catch (error) {
+    console.error(error);
+
+    // ❌ TOAST ERROR
+    toast.error("Something went wrong. Try again.");
+  } finally {
+    setIsSubmitting(false);
+  }
+};
 
   return (
     <section className="bg-gray-100 py-16 px-6 md:px-16 min-h-screen">
@@ -398,16 +404,6 @@ const Consultation = () => {
               />
             </div>
 
-            {successMessage && (
-              <div className="rounded-2xl border border-green-200 bg-green-50 p-4 text-green-800">
-                {successMessage}
-              </div>
-            )}
-            {errorMessage && (
-              <div className="rounded-2xl border border-rose-200 bg-rose-50 p-4 text-rose-800">
-                {errorMessage}
-              </div>
-            )}
 
             <button
               type="submit"

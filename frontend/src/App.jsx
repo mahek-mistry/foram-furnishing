@@ -32,6 +32,7 @@ import AdminOrders from './pages/admin/AdminOrders'
 import ShowUserOrders from './pages/admin/ShowUserOrders'
 import AdminUsers from './pages/admin/AdminUsers'
 import UserInfo from './pages/admin/UserInfo'
+// import adminconsultation from './pages/admin/AdminConsultation'
 import ProtectedRoute from './components/ui/ProtectedRoute'
 import SingleProduct from './pages/SingleProduct'
 import AddressForm from './pages/AddressForm'
@@ -44,9 +45,13 @@ import StyleGallery from './pages/StyleGallery'
 import RootLayout from "./components/RootLayout";
 import AdminContact from './pages/admin/AdminContact'
 import { useMemo, useState } from 'react';
-import { AnimatePresence, motion } from 'motion/react';
+// import { AnimatePresence, motion } from 'motion/react';
+import { AnimatePresence, motion } from 'framer-motion';
 import { ArrowRight, Bot, MessageSquare, Minimize2, X } from 'lucide-react';
 import { getGeminiResponse } from './services/geminiService';
+import AdminConsultation from './pages/admin/AdminConsultation'
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 const QUICK_ACTIONS = [
   'Suggest a living room palette',
   'Ideas for a small bedroom',
@@ -200,6 +205,7 @@ const router = createBrowserRouter([
           { path:"users", element: <AdminUsers/> },
           { path:"users/:id", element: <UserInfo/> },
           { path:"contact", element: <AdminContact/> },
+          { path:"adminconsultation", element: <AdminConsultation/> },
           // { path:"inventory", element: <Inventory/> },
         ]
       }
@@ -256,6 +262,7 @@ const App = () => {
   };
   return (
     <>
+     {/* <ToastContainer /> */}
     <RouterProvider router={router}/>
     <main className="min-h-screen">
 
