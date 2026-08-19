@@ -20,31 +20,27 @@ const Navbar = () => {
   const admin = user?.role === "admin" ? true : false;
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const accessToken = localStorage.getItem("accessToken");
-
   const logoutHandler = async () => {
+    const token = localStorage.getItem("accessToken");
     try {
-      const res = await axios.post(
-        "http://localhost:8000/api/v1/user/logout",
-        {},
-        {
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
+      if (token && token !== "null" && token !== "undefined") {
+        await axios.post(
+          "http://localhost:8000/api/v1/user/logout",
+          {},
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
           },
-        },
-      );
-
-      if (res.data.success) {
-        dispatch(setUser(null));
-        toast.success(res.data.message);
-
-        localStorage.removeItem("accessToken");
-
-        navigate("/login");
+        );
       }
     } catch (error) {
-      console.log(error);
-      toast.error("Logout failed");
+      console.log("Server logout error (proceeding with local logout):", error);
+    } finally {
+      dispatch(setUser(null));
+      localStorage.removeItem("accessToken");
+      toast.success("Logged out successfully");
+      navigate("/login");
     }
   };
 
@@ -113,7 +109,7 @@ const Navbar = () => {
                 Project
               </li>
             </Link>
-{/* 
+            {/* 
             <Link to={"/aboutus"}>
               <li
                 className="relative cursor-pointer hover:text-blue-600 transition duration-300 
@@ -138,7 +134,7 @@ const Navbar = () => {
               </li>
             </Link>
 
-            
+
             {admin && (
               <Link to={`/dashboard/sales`}>
                 <li
@@ -224,7 +220,7 @@ const Navbar = () => {
                 0}
             </span>
           </Link>
-          
+
 
           {/* Hamburger Menu Button */}
           <button

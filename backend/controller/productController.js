@@ -7,10 +7,17 @@ export const addProduct = async (req, res) => {
     const { productName, productDesc, productPrice, category, brand } = req.body;
     const userId = req.id;
 
-    if (!productName || !productDesc || !productPrice || !category || !brand) {
+    if (!productName || !productDesc || productPrice === undefined || productPrice === null || productPrice === "" || !category || !brand) {
       return res.status(400).json({
         success: false,
         message: "All fields are required"
+      });
+    }
+
+    if (!req.files || req.files.length === 0) {
+      return res.status(400).json({
+        success: false,
+        message: "At least one product image is required"
       });
     }
 
@@ -35,7 +42,7 @@ export const addProduct = async (req, res) => {
         userId,
         productName,
         productDesc,
-        productPrice,
+        productPrice: Number(productPrice),
         category,
         brand,
         productImg, //array of object   [{url, public_id},{url, public_id}]

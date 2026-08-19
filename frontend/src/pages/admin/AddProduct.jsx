@@ -12,13 +12,12 @@ import { Loader2 } from 'lucide-react'
 import axios from 'axios'
 
 const AddProduct = () => {
-  const accessToken = localStorage.getItem('accessToken')
   const { products } = useSelector((state) => state.product)
   const dispatch = useDispatch()
   const [loading, setLoading] = useState(false)
   const [productData, setProductData] = useState({
     productName: '',
-    productPrice: 0,
+    productPrice: '',
     productDesc: '',
     productImg: [],
     brand: '',
@@ -29,15 +28,28 @@ const AddProduct = () => {
     const { name, value } = e.target
     setProductData((prev) => ({
       ...prev,
-      [name]: name === 'productPrice' ? Number(value) : value
+      [name]: name === 'productPrice' ? (value === '' ? '' : Number(value)) : value
     }))
   }
 
   const submitHandler = async (e) => {
     e.preventDefault()
 
-    if (!productData.productName || !productData.brand || !productData.category) {
-      toast.error('Please fill in all required fields')
+    const token = localStorage.getItem('accessToken')
+    if (!token) {
+      toast.error('You are not authenticated. Please log in again.')
+      return
+    }
+
+    if (
+      !productData.productName ||
+      !productData.brand ||
+      !productData.category ||
+      !productData.productDesc ||
+      !productData.productPrice ||
+      Number(productData.productPrice) <= 0
+    ) {
+      toast.error('Please fill in all required fields with a valid price')
       return
     }
 
@@ -46,28 +58,33 @@ const AddProduct = () => {
       return
     }
 
+    if (productData.productImg.length > 5) {
+      toast.error('You can upload a maximum of 5 images')
+      return
+    }
+
     const formData = new FormData()
-    formData.append('productName', productData.productName)
+    formData.append('productName', productData.productName.trim())
     formData.append('productPrice', productData.productPrice)
-    formData.append('productDesc', productData.productDesc)
-    formData.append('category', productData.category)
-    formData.append('brand', productData.brand)
+    formData.append('productDesc', productData.productDesc.trim())
+    formData.append('category', productData.category.trim())
+    formData.append('brand', productData.brand.trim())
     productData.productImg.forEach((img) => formData.append('files', img))
 
     try {
       setLoading(true)
       const res = await axios.post('http://localhost:8000/api/v1/product/add', formData, {
         headers: {
-          Authorization: `Bearer ${accessToken}`
+          Authorization: `Bearer ${token}`
         }
       })
 
       if (res.data.success) {
         dispatch(setProducts([...products, res.data.product]))
-        toast.success(res.data.message)
+        toast.success(res.data.message || 'Product added successfully')
         setProductData({
           productName: '',
-          productPrice: 0,
+          productPrice: '',
           productDesc: '',
           productImg: [],
           brand: '',
@@ -76,7 +93,7 @@ const AddProduct = () => {
       }
     } catch (error) {
       console.error(error)
-      toast.error('Unable to add product. Please try again.')
+      toast.error(error.response?.data?.message || 'Unable to add product. Please try again.')
     } finally {
       setLoading(false)
     }
@@ -161,6 +178,7 @@ const AddProduct = () => {
                   placeholder='Add a short description to help customers understand the product.'
                   rows={4}
                   className='rounded-2xl border border-slate-300 bg-slate-50 px-4 py-3 text-slate-900 placeholder:text-slate-400 focus:border-blue-500 focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-200'
+                  required
                 />
               </div>
 
