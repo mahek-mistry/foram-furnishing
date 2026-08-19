@@ -66,8 +66,19 @@ const orderSchema = new mongoose.Schema(
         "Out for Delivery",
         "Delivered",
         "Cancelled",
+        "Cancel Requested",
       ],
       default: "Order Placed",
+    },
+
+    // ✅ NEW: Cancellation Flags
+    cancelRequest: {
+      type: Boolean,
+      default: false,
+    },
+    cancelApproved: {
+      type: Boolean,
+      default: false,
     },
 
     // Razorpay fields (only used for online payment)

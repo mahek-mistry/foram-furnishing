@@ -2,28 +2,45 @@ import axios from "axios";
 import React, { useEffect, useState } from "react";
 
 const AdminOrders = () => {
-
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
   const accessToken = localStorage.getItem("accessToken");
 
+  const approveCancel = async (orderId) => {
+    try {
+      const { data } = await axios.post(
+        `http://localhost:8000/api/v1/orders/approve-cancel/${orderId}`,
+        {},
+        {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        },
+      );
+
+      alert(data.msg || "Order cancelled successfully");
+
+      fetchOrders(); // refresh list
+    } catch (error) {
+      console.error("Failed to approve cancel", error);
+    }
+  };
+
   // Fetch Orders
   const fetchOrders = async () => {
     try {
-
       const { data } = await axios.get(
         "http://localhost:8000/api/v1/orders/all",
         {
-          headers: {
-            Authorization: `Bearer ${accessToken}`
-          }
-        }
+          headers: {  
+            Authorization: `Bearer ${accessToken}`,
+          },
+        },
       );
 
       if (data.success) {
         setOrders(data.orders);
       }
-
     } catch (error) {
       console.error("Failed to fetch orders", error);
     } finally {
@@ -37,24 +54,21 @@ const AdminOrders = () => {
 
   // Update Order Status
   const updateOrderStatus = async (orderId, status) => {
-
     try {
-
       const { data } = await axios.put(
         `http://localhost:8000/api/v1/orders/update-order-status/${orderId}`,
         { status },
         {
           headers: {
-            Authorization: `Bearer ${accessToken}`
-          }
-        }
+            Authorization: `Bearer ${accessToken}`,
+          },
+        },
       );
 
       if (data.success) {
         alert("Order Status Updated Successfully");
         fetchOrders();
       }
-
     } catch (error) {
       console.error("Failed to update order", error);
     }
@@ -62,29 +76,20 @@ const AdminOrders = () => {
 
   if (loading) {
     return (
-      <div className="text-center py-20 text-gray-500">
-        Loading Orders...
-      </div>
+      <div className="text-center py-20 text-gray-500">Loading Orders...</div>
     );
   }
 
   return (
     <div className="pl-[350px] py-20 pr-20 mx-auto px-4">
-
-      <h1 className="text-3xl font-bold mb-6">
-        Admin - All Orders
-      </h1>
+      <h1 className="text-3xl font-bold mb-6">Admin - All Orders</h1>
 
       {orders.length === 0 ? (
         <p>No Orders Found</p>
       ) : (
-
         <div className="overflow-x-auto">
-
           <table className="w-full border border-gray-200 text-left text-sm">
-
             <thead className="bg-gray-100">
-
               <tr>
                 <th className="px-4 py-2 border">Order ID</th>
                 <th className="px-4 py-2 border">User</th>
@@ -93,20 +98,15 @@ const AdminOrders = () => {
                 <th className="px-4 py-2 border">Order Status</th>
                 <th className="px-4 py-2 border">Update Status</th>
                 <th className="px-4 py-2 border">Date</th>
+                <th className="px-4 py-2 border">Cancel Request</th>
               </tr>
-
             </thead>
 
             <tbody>
-
               {orders.map((order) => (
-
                 <tr key={order._id} className="hover:bg-gray-50">
-
                   {/* Order ID */}
-                  <td className="px-4 py-2 border">
-                    {order._id}
-                  </td>
+                  <td className="px-4 py-2 border">{order._id}</td>
 
                   {/* User */}
                   <td className="px-4 py-2 border">
@@ -124,39 +124,32 @@ const AdminOrders = () => {
 
                   {/* Payment */}
                   <td className="px-4 py-2 border">
-
-                    <span className={`px-2 py-1 rounded text-xs font-medium
+                    <span
+                      className={`px-2 py-1 rounded text-xs font-medium
                       
                       ${
                         order.status === "Paid"
-                        ? "bg-green-100 text-green-700"
-                        : "bg-yellow-100 text-yellow-700"
+                          ? "bg-green-100 text-green-700"
+                          : "bg-yellow-100 text-yellow-700"
                       }
 
-                    `}>
+                    `}
+                    >
                       {order.status}
                     </span>
-
                   </td>
 
                   {/* Order Status */}
                   <td className="px-4 py-2 border font-semibold">
-
                     {order.orderStatus === "Cancelled" ? (
-                      <span className="text-red-600">
-                        Cancelled
-                      </span>
+                      <span className="text-red-600">Cancelled</span>
                     ) : (
-                      <span className="text-blue-600">
-                        {order.orderStatus}
-                      </span>
+                      <span className="text-blue-600">{order.orderStatus}</span>
                     )}
-
                   </td>
 
                   {/* Update */}
                   <td className="px-4 py-2 border">
-
                     <select
                       value={order.orderStatus}
                       onChange={(e) =>
@@ -164,7 +157,6 @@ const AdminOrders = () => {
                       }
                       className="border px-3 py-1 rounded"
                     >
-
                       <option value="Pending">Pending</option>
 
                       <option value="Placed">Placed</option>
@@ -173,41 +165,53 @@ const AdminOrders = () => {
 
                       <option value="Shipped">Shipped</option>
 
-                      <option value="Out for Delivery">
-                        Out for Delivery
-                      </option>
+                      <option value="Out for Delivery">Out for Delivery</option>
 
-                      <option value="Delivered">
-                        Delivered
-                      </option>
+                      <option value="Delivered">Delivered</option>
 
-                      <option value="Cancelled">
-                        Cancelled
-                      </option>
-
+                      <option value="Cancelled">Cancelled</option>
                     </select>
-
                   </td>
 
                   {/* Date */}
                   <td className="px-4 py-2 border">
-
                     {new Date(order.createdAt).toLocaleDateString()}
-
                   </td>
+                  <td className="px-4 py-2 border">
+                    {/* ✅ If user requested cancel */}
+                    {order.cancelRequest && !order.cancelApproved && (
+                      <div className="flex flex-col gap-2">
+                        <span className="text-yellow-600 text-xs font-semibold">
+                          Cancel Requested
+                        </span>
 
+                        <button
+                          onClick={() => approveCancel(order._id)}
+                          className="bg-red-600 text-white px-2 py-1 rounded text-xs hover:bg-red-700"
+                        >
+                          Approve Cancel
+                        </button>
+                      </div>
+                    )}
+
+                    {/* ✅ Already cancelled */}
+                    {order.cancelApproved && (
+                      <span className="text-red-600 text-xs font-semibold">
+                        Cancelled
+                      </span>
+                    )}
+
+                    {/* ✅ No request */}
+                    {!order.cancelRequest && (
+                      <span className="text-gray-400 text-xs">No Request</span>
+                    )}
+                  </td>
                 </tr>
-
               ))}
-
             </tbody>
-
           </table>
-
         </div>
-
       )}
-
     </div>
   );
 };

@@ -1,4 +1,5 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
 
 import modern from "../../assets/modern.jpeg";
 import traditional from "../../assets/traditional.jpeg";
@@ -6,6 +7,7 @@ import minimal from "../../assets/minimal.jpeg";
 import luxury from "../../assets/luxury.jpeg";
 
 const Feature = () => {
+  const navigate = useNavigate();
   const styles = [
     { name: "Modern", image: modern },
     { name: "Traditional", image: traditional },
@@ -36,13 +38,14 @@ const Feature = () => {
           {styles.map((item, index) => (
             <div
               key={index}
+              onClick={() => navigate(`/style/${item.name.toLowerCase()}`)}
               className="relative rounded-2xl overflow-hidden shadow-lg group cursor-pointer"
             >
               {/* Image */}
               <img
                 src={item.image}
                 alt={item.name}
-                className="w-full h-[320px] object-cover group-hover:scale-110 transition duration-500"
+                className="w-full h-80 object-cover group-hover:scale-110 transition duration-500"
               />
 
               {/* Overlay */}

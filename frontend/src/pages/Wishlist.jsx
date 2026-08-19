@@ -148,7 +148,7 @@ const Wishlist = () => {
 
                 <Button
                   onClick={() => addToCart(product._id)}
-                  className="bg-blue-600 w-full mb-2"
+                  className="bg-blue-600 w-full mb-2 text-white"
                 >
                   <ShoppingCart className="mr-2 h-4 w-4" />
                   Add to Cart

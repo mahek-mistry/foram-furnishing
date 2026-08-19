@@ -50,7 +50,7 @@ const Hero = () => {
         {slides.map((slide, index) => (
           <div
             key={index}
-            className="w-full h-screen flex-shrink-0 relative"
+            className="w-full h-screen shrink-0 relative"
           >
             {/* Image */}
             <img
@@ -84,7 +84,7 @@ const Hero = () => {
                 {/* Button */}
                 <div className="flex gap-4 mt-6">
                   <Link
-                    to="/Contactus"
+                    to="/estimate"
                     className="bg-blue-600 hover:bg-blue-700 px-6 py-3 rounded-lg font-medium"
                   >
                     Click for Enquiry →
@@ -114,3 +114,5 @@ const Hero = () => {
 };
 
 export default Hero;
+
+

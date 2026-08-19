@@ -226,8 +226,11 @@ export const downloadInvoice = async (req, res) => {
     doc.moveDown();
 
     order.products.forEach((item) => {
+      // ✅ Handle null products gracefully
+      const productName = item.productId?.productName || "Product Unavailable";
+      const productPrice = item.productId?.productPrice || 0;
       doc.text(
-        `${item.productId.productName} | Qty: ${item.quantity} | Price: ₹${item.productId.productPrice}`,
+        `${productName} | Qty: ${item.quantity} | Price: ₹${productPrice}`,
       );
     });
 
@@ -459,6 +462,86 @@ Foram Furnishing
 
   } catch (error) {
     console.error("🔥 COD ERROR:", error);
+    res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
+export const cancelRequestOrder = async (req, res) => {
+  try {
+    const orderId = req.params.id;
+
+    const order = await Order.findById(orderId);
+
+    if (!order) {
+      return res.status(404).json({
+        success: false,
+        message: "Order not found",
+      });
+    }
+
+    if (order.orderStatus === "Delivered") {
+      return res.status(400).json({
+        success: false,
+        message: "Delivered orders cannot be cancelled",
+      });
+    }
+
+    // ✅ Ensure paymentMethod is set (for old orders)
+    if (!order.paymentMethod) {
+      order.paymentMethod = "RAZORPAY"; // Default to RAZORPAY if not set
+    }
+
+    order.orderStatus = "Cancel Requested";
+    order.cancelRequest = true;
+
+    await order.save();
+
+    res.status(200).json({
+      success: true,
+      message: "Cancel request sent",
+      order,
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
+
+export const approveCancelOrder = async (req, res) => {
+  try {
+    const orderId = req.params.id;
+
+    const order = await Order.findById(orderId);
+
+    if (!order) {
+      return res.status(404).json({
+        success: false,
+        message: "Order not found",
+      });
+    }
+
+    // ✅ Ensure paymentMethod is set (for old orders)
+    if (!order.paymentMethod) {
+      order.paymentMethod = "RAZORPAY"; // Default to RAZORPAY if not set
+    }
+
+    order.orderStatus = "Cancelled";
+    order.cancelApproved = true;
+
+    await order.save();
+
+    res.status(200).json({
+      success: true,
+      message: "Order cancellation approved successfully",
+      order,
+    });
+  } catch (error) {
+    console.error(error);
     res.status(500).json({
       success: false,
       message: error.message,

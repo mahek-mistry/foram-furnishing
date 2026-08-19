@@ -3,14 +3,41 @@ import { Button } from "./ui/button";
 import { ArrowLeft } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import OrderTracking from "./OrderTracking";
+import axios from "axios";
 
 const OrderCard = ({ userOrder = [], downloadInvoice }) => {
   const navigate = useNavigate();
 
+  const handleCancelRequest = async (id, orderStatus) => {
+    // Check if order is in a status where cancellation is not allowed
+    if (orderStatus === "Out for Delivery" || orderStatus === "Delivered") {
+      alert(
+        "Your order is out of delivery and delivered, so you cannot cancel the order. Thank you"
+      );
+      return;
+    }
+
+    try {
+      const accessToken = localStorage.getItem("accessToken");
+      const res = await axios.post(
+        `http://localhost:8000/api/v1/orders/cancel-request/${id}`,
+        {},
+        {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        }
+      );
+
+      alert("Cancel request sent");
+      console.log(res.data);
+    } catch (error) {
+      console.error(error);
+    }
+  };
   return (
     <div className="pr-20 flex flex-col gap-6">
       <div className="w-full p-6">
-
         {/* Header */}
         <div className="flex items-center gap-4 mb-8">
           <Button onClick={() => navigate(-1)}>
@@ -21,18 +48,14 @@ const OrderCard = ({ userOrder = [], downloadInvoice }) => {
 
         {/* EMPTY STATE */}
         {!userOrder || userOrder.length === 0 ? (
-          <p className="text-gray-500 text-lg">
-            No Orders Found
-          </p>
+          <p className="text-gray-500 text-lg">No Orders Found</p>
         ) : (
           <div className="space-y-6">
-
             {userOrder.map((order) => (
               <div
                 key={order._id}
                 className="border rounded-xl shadow-sm p-6 bg-white"
               >
-
                 {/* ORDER HEADER */}
                 <div className="flex justify-between mb-4">
                   <div>
@@ -95,30 +118,64 @@ const OrderCard = ({ userOrder = [], downloadInvoice }) => {
                       </div>
                     ))
                   ) : (
-                    <p className="text-sm text-gray-400">
-                      No products found
-                    </p>
+                    <p className="text-sm text-gray-400">No products found</p>
                   )}
                 </div>
 
                 {/* INVOICE BUTTON */}
-                {order?.status === "Paid" && (
-                  <div className="mt-6">
+                <div className="mt-6 flex items-center gap-3">
+                  {/* ✅ INVOICE ONLY FOR PAID */}
+                  {order?.status === "Paid" && (
                     <Button
                       className="bg-blue-600 hover:bg-blue-700"
                       onClick={() => downloadInvoice(order._id)}
                     >
                       Download Invoice
                     </Button>
-                  </div>
-                )}
+                  )}
 
+                  {/* ✅ CANCEL BUTTON FOR BOTH COD + RAZORPAY */}
+                  {!order.cancelRequest &&
+                    order.orderStatus !== "Cancelled" &&
+                    order.orderStatus !== "Out for Delivery" &&
+                    order.orderStatus !== "Delivered" && (
+                      <Button
+                        className="bg-red-600 hover:bg-red-700"
+                        onClick={() =>
+                          handleCancelRequest(order._id, order.orderStatus)
+                        }
+                      >
+                        Cancel Order
+                      </Button>
+                    )}
+
+                  {/* ✅ MESSAGE FOR OUT OF DELIVERY/DELIVERED */}
+                  {(order.orderStatus === "Out for Delivery" ||
+                    order.orderStatus === "Delivered") && (
+                    <span className="text-gray-600 font-medium">
+                      Cancellation not allowed - Order is{" "}
+                      {order.orderStatus.toLowerCase()}
+                    </span>
+                  )}
+
+                  {/* ✅ REQUEST SENT */}
+                  {order.cancelRequest && !order.cancelApproved && (
+                    <span className="text-yellow-600 font-medium">
+                      Cancel Request Sent
+                    </span>
+                  )}
+
+                  {/* ✅ APPROVED */}
+                  {order.cancelApproved && (
+                    <span className="text-red-600 font-medium">
+                      Order Cancelled
+                    </span>
+                  )}
+                </div>
               </div>
             ))}
-
           </div>
         )}
-
       </div>
     </div>
   );
